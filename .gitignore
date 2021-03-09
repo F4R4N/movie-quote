@@ -1,0 +1,6 @@
+venv/
+api/migrations/
+api/__pycache__/
+*.sqlite3
+config/config.py
+config/__pycache__/
