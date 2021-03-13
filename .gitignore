@@ -4,3 +4,4 @@ api/__pycache__/
 *.sqlite3
 config/config.py
 config/__pycache__/
+Backups/
