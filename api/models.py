@@ -6,7 +6,7 @@ from django.utils.text import slugify
 def random_key():
 	all_digits = list(string.digits)
 	random_key = ""
-	return random_key.join(random.sample(all_digits, 4))
+	return random_key.join(random.sample(all_digits, 10))
 
 class Show(models.Model):
 	name = models.CharField(max_length=100, unique=True)
