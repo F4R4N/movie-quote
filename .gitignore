@@ -5,3 +5,5 @@ api/__pycache__/
 config/config.py
 config/__pycache__/
 Backups/
+test*
+.vscode/
