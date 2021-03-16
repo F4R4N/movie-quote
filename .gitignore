@@ -1,9 +1,10 @@
 venv/
 api/migrations/
 api/__pycache__/
+auth/__pycache__/
+config/__pycache__/
 *.sqlite3
 config/config.py
-config/__pycache__/
 Backups/
 test*
 .vscode/
