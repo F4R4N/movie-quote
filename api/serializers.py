@@ -22,7 +22,7 @@ class AdminAddUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id","username", "first_name", 'last_name', "email", "password2", "password1", "is_superuser", "is_active")
+        fields = ("id","username", "first_name", 'last_name', "email", "password2", "password1", "is_superuser", "is_active", "is_staff")
         extra_kwargs = {
             "first_name": {"required": True},
             "last_name": {"required": True}
