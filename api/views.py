@@ -54,7 +54,7 @@ class SpecificShowQuotes(APIView):
 
 class AdminQuoteView(generics.ListCreateAPIView):
 	queryset = Quote.objects.all()
-	permission_classes = (IsAdminOrReadOnly, )
+	permission_classes = (permissions.IsAdminUser, )
 	serializer_class = AdminQuoteSerializer
 
 
@@ -65,13 +65,12 @@ class AdminEditQuoteView(APIView):
 		if not Quote.objects.filter(key=key).exists():
 			return Response(status=status.HTTP_404_NOT_FOUND, data={"detail": "requested quote not found."})
 		if not "quote" in request.data:
-			return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "no new data provided", "available_field": ["quote"]})
+			return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "no new data provided", "available_fields": ["quote"]})
 		quote = get_object_or_404(Quote, key=key)
 		quote.quote = request.data["quote"]
 		quote.save()
 		return Response(status=status.HTTP_200_OK, data={"detail": "updated"})
 
-# class AdminAllQuotes():
 
 # class AdminEditShowView():
 
@@ -79,7 +78,7 @@ class AdminEditQuoteView(APIView):
 
 
 
-class AdminUserView(viewsets.ModelViewSet):
+class AdminUserView(generics.ListCreateAPIView):
 	""" add user accessible only from admin user """
 	queryset = User.objects.all()
 	permission_classes = (permissions.IsAdminUser, )
@@ -141,7 +140,10 @@ class AdminDeleteUserView(APIView):
 
 	def delete(self, request, pk, format=None):
 		user = request.user
-		if user != User.objects.get(pk=pk) or user.username == "faran":
-			return Response(status=status.HTTP_401_UNAUTHORIZED, data={"detail": "you dont have permission for this user."})
-		user.is_active = False
-		user.save()
+		deletable_user = get_object_or_404(User, pk=pk)
+		if user.username != "faran":
+			if user != deletable_user:
+				return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "you dont have permission for this user."})
+		deletable_user.is_active = False
+		deletable_user.save()
+		return Response(status=status.HTTP_200_OK, data={"detail": "user '{0}' deleted".format(deletable_user.username)})
