@@ -6,7 +6,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email
 from django.conf import settings
 from .models import Quote, Show, Role
-from .serializers import QuoteSerializer, AdminQuoteSerializer, AdminAddUserSerializer
+from .serializers import QuoteSerializer, AdminQuoteSerializer, AdminAddUserSerializer, ShowSerializer, RoleSerializer
 from django.shortcuts import get_object_or_404
 from .utils import IsAdminOrReadOnly
 import random
@@ -55,6 +55,7 @@ class SpecificShowQuotes(APIView):
 		serializer = QuoteSerializer(instance=quote)
 		return Response(status=status.HTTP_200_OK, data=serializer.data)
 
+
 class AdminQuoteView(generics.ListCreateAPIView):
 	""" GET show all quotes at once (admin only). POST add new quote (included quote, show, role) (admins only)."""
 	queryset = Quote.objects.all()
@@ -77,7 +78,7 @@ class AdminEditQuoteView(APIView):
 		return Response(status=status.HTTP_200_OK, data={"detail": "quote updated"})
 
 
-class AdminEditShowView(APIView):
+class AdminEditShowView(generics.RetrieveUpdateAPIView):
 	""" edit show get field 'name' should include show slug in url. """
 	permission_classes = (permissions.IsAdminUser, )
 
@@ -89,10 +90,14 @@ class AdminEditShowView(APIView):
 		show.save()
 		return Response(status=status.HTTP_200_OK, data={"detail": "show updated"})
 
+class AdminAllShowsView(generics.ListAPIView):
+	permission_classes = (permissions.IsAdminUser, )
+	serializer_class = ShowSerializer
+	queryset = Show.objects.all()
 
-class AdminEditRoleView(APIView):
+
+class AdminEditRoleView(generics.RetrieveUpdateAPIView):
 	""" edit role get field 'name' should include role slug in url. """
-
 	permission_classes = (permissions.IsAdminUser, )
 
 	def put(self, request, slug, format=None):
@@ -102,6 +107,11 @@ class AdminEditRoleView(APIView):
 		role.name = request.data["name"]
 		role.save()
 		return Response(status=status.HTTP_200_OK, data={"detail": "role updated."})
+
+class AdminAllRolesView(generics.ListAPIView):
+	permission_classes = (permissions.IsAdminUser, )
+	serializer_class = RoleSerializer
+	queryset = Role.objects.all()
 
 
 class AdminUserView(generics.ListCreateAPIView):
