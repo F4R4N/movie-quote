@@ -77,8 +77,14 @@ class AdminEditQuoteView(APIView):
 		quote.save()
 		return Response(status=status.HTTP_200_OK, data={"detail": "quote updated"})
 
+	def delete(self, request, key, format=None):
+		quote = Quote.objects.get(key=key)
+		quote.delete()
+		return Response(status=status.HTTP_200_OK, data={"detail": "deleted"})
 
-class AdminEditShowView(generics.RetrieveUpdateAPIView):
+
+
+class AdminEditShowView(APIView):
 	""" edit show get field 'name' should include show slug in url. """
 	permission_classes = (permissions.IsAdminUser, )
 
@@ -91,12 +97,13 @@ class AdminEditShowView(generics.RetrieveUpdateAPIView):
 		return Response(status=status.HTTP_200_OK, data={"detail": "show updated"})
 
 class AdminAllShowsView(generics.ListAPIView):
+	""" show all shows to admin user """
 	permission_classes = (permissions.IsAdminUser, )
 	serializer_class = ShowSerializer
 	queryset = Show.objects.all()
 
 
-class AdminEditRoleView(generics.RetrieveUpdateAPIView):
+class AdminEditRoleView(APIView):
 	""" edit role get field 'name' should include role slug in url. """
 	permission_classes = (permissions.IsAdminUser, )
 
@@ -109,6 +116,7 @@ class AdminEditRoleView(generics.RetrieveUpdateAPIView):
 		return Response(status=status.HTTP_200_OK, data={"detail": "role updated."})
 
 class AdminAllRolesView(generics.ListAPIView):
+	""" show all roles to admin user """
 	permission_classes = (permissions.IsAdminUser, )
 	serializer_class = RoleSerializer
 	queryset = Role.objects.all()
