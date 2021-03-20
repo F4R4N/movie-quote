@@ -124,5 +124,4 @@ SWAGGER_SETTINGS = {
             'in': 'header'
         }
     }
-
 }
