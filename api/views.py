@@ -78,7 +78,7 @@ class AdminEditQuoteView(APIView):
 		return Response(status=status.HTTP_200_OK, data={"detail": "quote updated"})
 
 	def delete(self, request, key, format=None):
-		quote = Quote.objects.get(key=key)
+		quote = get_object_or_404(Quote, key=key)
 		quote.delete()
 		return Response(status=status.HTTP_200_OK, data={"detail": "deleted"})
 
