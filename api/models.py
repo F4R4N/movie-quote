@@ -40,9 +40,3 @@ class Quote(models.Model):
 	def __str__(self):
 		return str(self.key)
 		
-class Visit(models.Model):
-	visits = models.PositiveIntegerField(default=0)
-	date = models.DateField(auto_now=True)
-
-	def __str__(self):
-		return "visits: '{0}', date: '{1}'".format(str(self.visits), str(self.date))

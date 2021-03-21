@@ -5,7 +5,8 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email
 from django.conf import settings
-from .models import Quote, Show, Role, Visit
+from .models import Quote, Show, Role
+from statistic.models import Visit
 from .serializers import QuoteSerializer, AdminQuoteSerializer, AdminAddUserSerializer, ShowSerializer, RoleSerializer
 from django.shortcuts import get_object_or_404
 from .utils import IsAdminOrReadOnly
