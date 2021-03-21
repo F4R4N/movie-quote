@@ -65,17 +65,24 @@ class AdminQuoteView(generics.ListCreateAPIView):
 
 class AdminEditQuoteView(APIView):
 	""" edit quotes get field 'quote'. should include quote key in the url. """
-	permission_classes = (IsAdminOrReadOnly, )
+	permission_classes = (permissions.IsAdminUser, )
 
 	def put(self, request, key, format=None): 
-		if not Quote.objects.filter(key=key).exists():
-			return Response(status=status.HTTP_404_NOT_FOUND, data={"detail": "requested quote not found."})
-		if not "quote" in request.data:
-			return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "no new data provided", "available_fields": ["quote"]})
+		if not "quote" and "show" and "role" in request.data:
+			return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "no new data provided"})
 		quote = get_object_or_404(Quote, key=key)
-		quote.quote = request.data["quote"]
+
+		if "show" in request.data:
+			show = get_object_or_404(Show, name=request.data["show"].title())
+			quote.show = show
+		if "role" in request.data:
+			role = get_object_or_404(Role, name=request.data["role"].title())
+			quote.role = role
+		if "quote" in request.data:
+			quote.quote = request.data["quote"]
 		quote.save()
-		return Response(status=status.HTTP_200_OK, data={"detail": "quote updated"})
+		return Response(status=status.HTTP_200_OK, data={"detail": "updated"})
+
 
 	def delete(self, request, key, format=None):
 		quote = get_object_or_404(Quote, key=key)
