@@ -34,6 +34,7 @@ class UserQuoteView(APIView):
 	permission_classes = (permissions.AllowAny, )
 
 	def get(self, request, format=None):
+		
 		all_quotes = Quote.objects.all().values_list('pk', flat=True)
 		quote_pk = random.choice(all_quotes)
 		quote = get_object_or_404(Quote, pk=quote_pk)

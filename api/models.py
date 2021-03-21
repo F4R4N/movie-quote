@@ -40,3 +40,6 @@ class Quote(models.Model):
 	def __str__(self):
 		return str(self.key)
 		
+# class Visit(models.Model):
+# 	visits = models.PositiveIntegerField()
+# 	date = 
