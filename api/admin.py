@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Quote, Role, Show
+from .models import Quote, Role, Show, Visit
 
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
@@ -16,5 +16,7 @@ class RoleAdmin(admin.ModelAdmin):
 	list_display = ('name', 'slug', "id")
 	prepopulated_fields = {"slug": ("name", )}
 
-
-
+@admin.register(Visit)
+class VisitAdmin(admin.ModelAdmin):
+	list_display = ("date", "visits")
+	

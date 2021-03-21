@@ -5,13 +5,13 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email
 from django.conf import settings
-from .models import Quote, Show, Role
+from .models import Quote, Show, Role, Visit
 from .serializers import QuoteSerializer, AdminQuoteSerializer, AdminAddUserSerializer, ShowSerializer, RoleSerializer
 from django.shortcuts import get_object_or_404
 from .utils import IsAdminOrReadOnly
 import random
 from django.contrib.auth.models import User
-
+from django.utils import timezone
 
 class MainPage(APIView):
 	""" show developers info instead of 404 at the main page. """
@@ -34,7 +34,14 @@ class UserQuoteView(APIView):
 	permission_classes = (permissions.AllowAny, )
 
 	def get(self, request, format=None):
-		
+		try :
+			visit = Visit.objects.get(date=timezone.now().date())
+			visit.visits += 1
+			visit.save()
+		except Visit.DoesNotExist as dne:
+			visit = Visit.objects.create()
+			visit.visits += 1
+			visit.save()
 		all_quotes = Quote.objects.all().values_list('pk', flat=True)
 		quote_pk = random.choice(all_quotes)
 		quote = get_object_or_404(Quote, pk=quote_pk)
