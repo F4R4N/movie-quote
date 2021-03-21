@@ -64,7 +64,7 @@ class AdminQuoteView(generics.ListCreateAPIView):
 
 
 class AdminEditQuoteView(APIView):
-	""" edit quotes get field 'quote'. should include quote key in the url. """
+	""" edit quotes get field 'quote', 'role', 'show'. should include quote key in the url. """
 	permission_classes = (permissions.IsAdminUser, )
 
 	def put(self, request, key, format=None): 

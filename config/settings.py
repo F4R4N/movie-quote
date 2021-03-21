@@ -1,7 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 import os
-from .config import CONFIG_DEBUG, CONFIG_SECRET_KEY
+from .config import CONFIG_DEBUG, CONFIG_SECRET_KEY, CONFIG_SECURE_SSL_REDIRECT, CONFIG_SECURE_PROXY_SSL_HEADER
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -126,3 +126,6 @@ SWAGGER_SETTINGS = {
     }
 }
 CORS_ALLOW_ALL_ORIGINS = True
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = CONFIG_SECURE_PROXY_SSL_HEADER
+    SECURE_SSL_REDIRECT = CONFIG_SECURE_SSL_REDIRECT
