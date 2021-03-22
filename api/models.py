@@ -10,7 +10,7 @@ def random_key():
 
 class Show(models.Model):
 	name = models.CharField(max_length=100, unique=True)
-	slug = models.SlugField(max_length=100, default=slugify(name))
+	slug = models.SlugField(max_length=100)
 
 	def save(self, *args, **kwargs):
 		self.slug = slugify(self.name)
@@ -21,7 +21,7 @@ class Show(models.Model):
 
 class Role(models.Model):
 	name = models.CharField(max_length=100, unique=True)
-	slug = models.SlugField(max_length=100, default=slugify(name))	
+	slug = models.SlugField(max_length=100)	
 
 	def save(self, *args, **kwargs):
 		self.slug = slugify(self.name)

@@ -40,8 +40,7 @@ class UserQuoteView(APIView):
 			visit.visits += 1
 			visit.save()
 		except Visit.DoesNotExist as dne:
-			visit = Visit.objects.create()
-			visit.visits += 1
+			visit = Visit.objects.create(visits=1)
 			visit.save()
 		all_quotes = Quote.objects.all().values_list('pk', flat=True)
 		quote_pk = random.choice(all_quotes)

@@ -10,3 +10,4 @@ test*
 .vscode/
 statistic/__pycache__/
 statistic/migrations/
+
