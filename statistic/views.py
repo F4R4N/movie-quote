@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.utils import timezone
 from .models import Visit
+from django.shortcuts import get_object_or_404
 from .serializers import VisitSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status, viewsets, generics
 import calendar
+
 class VisitsYearView(APIView):
-	permissin_classes = (permissions.IsAdminUser)
+	permissin_classes = (permissions.IsAdminUser, )
 
 	def get(self, request, year, format=None):
 		cur_year = timezone.now().year
@@ -28,7 +30,7 @@ class VisitsYearView(APIView):
 
 
 class VisitsMonthView(APIView):
-	permissin_classes = (permissions.IsAdminUser)
+	permissin_classes = (permissions.IsAdminUser, )
 
 	def get(self, request, year, month, foramt=None):
 		cur_year = timezone.now().year
@@ -54,3 +56,10 @@ class VisitsMonthView(APIView):
 
 
 		return Response(status=status.HTTP_200_OK, data=visits_in_month)
+
+class VisitorsView(APIView):
+	permissin_classes = (permissions.IsAdminUser, )
+
+	def get(self, request, year, month, day, format=None):
+		visit = get_object_or_404(Visit, date__year=year, date__month=month, date__day=day)
+		return Response(status=status.HTTP_200_OK, data=visit.ips)
