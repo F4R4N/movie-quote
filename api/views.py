@@ -10,10 +10,11 @@ from statistic.models import Visit
 from .serializers import QuoteSerializer, AdminQuoteSerializer, AdminAddUserSerializer, ShowSerializer, RoleSerializer
 from django.shortcuts import get_object_or_404
 from .utils import IsAdminOrReadOnly
+from statistic.utils import get_client_ip
 import random
 from django.contrib.auth.models import User
 from django.utils import timezone
-
+from statistic.utils import add_or_create_visit
 class MainPage(APIView):
 	""" show developers info instead of 404 at the main page. """
 	permission_classes = (permissions.AllowAny, )
@@ -35,13 +36,8 @@ class UserQuoteView(APIView):
 	permission_classes = (permissions.AllowAny, )
 
 	def get(self, request, format=None):
-		try :
-			visit = Visit.objects.get(date=timezone.now().date())
-			visit.visits += 1
-			visit.save()
-		except Visit.DoesNotExist as dne:
-			visit = Visit.objects.create(visits=1)
-			visit.save()
+		ip = get_client_ip(request)
+		add_or_create_visit(ip)
 		all_quotes = Quote.objects.all().values_list('pk', flat=True)
 		quote_pk = random.choice(all_quotes)
 		quote = get_object_or_404(Quote, pk=quote_pk)
