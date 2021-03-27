@@ -10,5 +10,5 @@ test*
 .vscode/
 diff*
 statistic/__pycache__/
-statistic/migrations/*
+statistic/migrations/
 

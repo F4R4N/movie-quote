@@ -9,7 +9,7 @@ schema_view = get_schema_view(
 	openapi.Info(
 		title="Movie Quote Api Documentation",
 		default_version='v1',
-		description="all you need to know about the shop api is in the following documentation please dont bother.",
+		description="all you need to know about the movie quote api is in the following documentation please dont bother.",
 		contact=openapi.Contact(email="farantgh@gmail.com"),
 		license=openapi.License(name="BSD License"),
 	),
