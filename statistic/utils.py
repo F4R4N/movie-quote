@@ -9,7 +9,7 @@ def add_or_create_visit(ip):
 		if ip in visit.ips:
 			visit.ips[ip] += 1
 		else:
-			visit.ips[ip] +=1
+			visit.ips[ip] = 1
 		visit.save()
 	except Visit.DoesNotExist as dne:
 		visit = Visit.objects.create(visits=1, ips={ip: 1})
