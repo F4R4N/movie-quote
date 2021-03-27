@@ -11,8 +11,9 @@ from django.contrib.auth.models import User
 class QuoteSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Quote
-		fields = ("quote", 'role')
+		fields = ("quote", 'role', "show")
 	role = serializers.CharField(source="role.name")
+    show = serializers.CharField(source="show.name")
 
 class AdminAddUserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
