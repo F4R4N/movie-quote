@@ -2,8 +2,10 @@ from django.db import models
 
 class Visit(models.Model):
 	visits = models.PositiveIntegerField(default=0)
-	# date = models.DateField(auto_now=True, unique=True) # deployment
-	date = models.DateField(unique=True) # development
+	date = models.DateField(auto_now=True, unique=True) # deployment
+	ips = models.JSONField(blank=True, null=True)
+	# date = models.DateField(unique=True) # development
+
 
 
 	def __str__(self):
