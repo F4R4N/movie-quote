@@ -8,6 +8,7 @@ config/config.py
 Backups/
 test*
 .vscode/
+diff*
 statistic/__pycache__/
 statistic/migrations/
 
