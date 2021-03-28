@@ -15,6 +15,7 @@ import random
 from django.contrib.auth.models import User
 from django.utils import timezone
 from statistic.utils import add_or_create_visit
+
 class MainPage(APIView):
 	""" show developers info instead of 404 at the main page. """
 	permission_classes = (permissions.AllowAny, )

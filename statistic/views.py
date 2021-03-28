@@ -22,9 +22,9 @@ class VisitsYearView(APIView):
 		cur_month_visits = {}
 		for month in range(1, months+1):
 			if not month in cur_month_visits.keys():
-				cur_month_visits[month] = 0
+				cur_month_visits[calendar.month_name[month]] = 0
 			year_visit = list(Visit.objects.filter(date__year=year, date__month=month).values_list("visits", flat=True))
-			cur_month_visits[month] += sum(year_visit)
+			cur_month_visits[calendar.month_name[month]] += sum(year_visit)
 
 		return Response(status=status.HTTP_200_OK, data=cur_month_visits)
 
@@ -47,10 +47,10 @@ class VisitsMonthView(APIView):
 		if month == cur_month:
 			day_in_cur_month = cur_day
 		for day in range(1, day_in_cur_month+1):
-			visits_in_month[day] = 0
+			visits_in_month["{0}-{1}-{2}".format(year, month, day)] = 0
 			try:
 				month_visit = Visit.objects.get(date__year=year, date__month=mnt, date__day=day)
-				visits_in_month[day] = month_visit.visits
+				visits_in_month["{0}-{1}-{2}".format(year, month, day)] = month_visit.visits
 			except Visit.DoesNotExist as er:
 				pass
 
@@ -63,3 +63,4 @@ class VisitorsView(APIView):
 	def get(self, request, year, month, day, format=None):
 		visit = get_object_or_404(Visit, date__year=year, date__month=month, date__day=day)
 		return Response(status=status.HTTP_200_OK, data=visit.ips)
+	
