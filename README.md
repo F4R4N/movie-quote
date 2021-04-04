@@ -1,9 +1,23 @@
 # movie-quote
 a api made by django rest framework serve movie and series quotes.
 
-1. Install [python](https://python.org)
-2. cd movie-quote
-3. ` python -m venv venv`
-4. Linux(source venv/bin/activate) Windows(\venv\Script\activate)
-5. python manage.py migrate
-6. python manage.py runserver
+## Installation
+### Linux
+1. git clone https://github.com/F4R4N/movie-quote.git
+2. apt install python3
+3. cd movie-quote
+4. ` python3 -m venv venv`
+5. source venv/bin/activate
+6. python3 manage.py migrate
+7. python3 manage.py runserver
+8. open browser in 127.0.0.1:8000
+
+### Windows
+1. git clone https://github.com/F4R4N/movie-quote.git or download directly
+2. install [python3](https://www.python.org/downloads/)
+3. cd movie-quote
+4. `python -m venv venv`
+5. venv\Scripts\activate
+6. python manage.py migrate
+7. python manage.py runserver
+8. open browser in 127.0.0.1:8000
