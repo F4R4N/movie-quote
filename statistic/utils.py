@@ -5,7 +5,6 @@ def add_or_create_visit(ip):
 	try :
 		visit = Visit.objects.get(date=timezone.now().date())
 		visit.visits += 1
-		print(visit.ips.keys)
 		if ip in visit.ips:
 			visit.ips[ip] += 1
 		else:
