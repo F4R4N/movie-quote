@@ -25,10 +25,13 @@ class MainPage(APIView):
 		data = {
 			"Developer": "Faran Taghavi",
 			"Email": "farantgh@gmail.com",
-			"Website": "movie-quote-api.herokuapp.com",
+			"Website": "https://movie-quote-api.herokuapp.com/",
 			"Github": "https://github.com/F4R4N",
 			"Show-Slugs": all_shows,
-			"Url": "https://movie-quote-api.herokuapp.com/v1/shows/<Show-Slugs>"
+			"Paths": [
+				"v1/quote/"
+				"v1/shows/<Show-Slugs>"
+			]
 		}
 		return Response(status=status.HTTP_200_OK, data=data)
 
