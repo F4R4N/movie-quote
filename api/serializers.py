@@ -2,11 +2,8 @@ from rest_framework import serializers
 from .models import Quote, Role, Show
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from django.shortcuts import get_object_or_404
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.serializers import TokenObtainSerializer
-from rest_framework_simplejwt.settings import api_settings
 from django.contrib.auth.models import User
+
 
 class QuoteSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -15,15 +12,26 @@ class QuoteSerializer(serializers.ModelSerializer):
 	role = serializers.CharField(source="role.name")
 	show = serializers.CharField(source="show.name")
 
+
 class AdminAddUserSerializer(serializers.ModelSerializer):
-	username = serializers.CharField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
-	email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
-	password1 = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-	password2 = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+	username = serializers.CharField(
+		required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+
+	email = serializers.EmailField(
+		required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+
+	password1 = serializers.CharField(
+		write_only=True, required=True, validators=[validate_password])
+
+	password2 = serializers.CharField(
+		write_only=True, required=True, validators=[validate_password])
 
 	class Meta:
 		model = User
-		fields = ("id","username", "first_name", 'last_name', "email", "password2", "password1", "is_superuser", "is_active", "is_staff")
+		fields = (
+			"id", "username", "first_name", 'last_name', "email", "password2",
+			"password1", "is_superuser", "is_active", "is_staff")
+
 		extra_kwargs = {
 			"first_name": {"required": True},
 			"last_name": {"required": True}
@@ -31,7 +39,9 @@ class AdminAddUserSerializer(serializers.ModelSerializer):
 
 	def validate(self, attrs):
 		if self.context['request'].user.username != "faran":
-			raise serializers.ValidationError({"detail": "you dont have permission to perform this action", "hint": "contact user 'faran'"})
+			raise serializers.ValidationError(
+				{"detail": "you dont have permission to perform this action", "hint": "contact user 'faran'"})
+
 		if attrs['password2'] != attrs["password1"]:
 			raise serializers.ValidationError({"password": "password fields dont match"})
 		return attrs
@@ -56,6 +66,7 @@ class ShowSerializer(serializers.ModelSerializer):
 		fields = ("name", "slug")
 		read_only_fields = ("slug", )
 
+
 class RoleSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Role
@@ -66,6 +77,7 @@ class RoleSerializer(serializers.ModelSerializer):
 class AdminQuoteSerializer(serializers.ModelSerializer):
 	role = serializers.CharField(required=True)
 	show = serializers.CharField(required=True)
+
 	class Meta:
 		model = Quote
 		fields = ("key", "quote", "role", "show")
