@@ -1,7 +1,7 @@
-from django.urls import path, include
-from .views import (MainPage, SpecificShowQuotes, 
-	AdminQuoteView, AdminDeleteUserView, AdminEditQuoteView, 
-	AdminUserView, AdminEditUserView, UserQuoteView, 
+from django.urls import path
+from .views import (
+	MainPage, SpecificShowQuotes, AdminQuoteView, AdminDeleteUserView,
+	AdminEditQuoteView, AdminUserView, AdminEditUserView, UserQuoteView,
 	AdminEditShowView, AdminEditRoleView, AdminAllShowsView, AdminAllRolesView)
 
 

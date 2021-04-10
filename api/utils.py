@@ -7,4 +7,3 @@ class IsAdminOrReadOnly(BasePermission):
 			return True
 		else:
 			return request.user.is_staff
-
