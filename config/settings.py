@@ -1,7 +1,9 @@
 from pathlib import Path
 from datetime import timedelta
-import os
-from .config import CONFIG_DEBUG, CONFIG_SECRET_KEY, CONFIG_SECURE_SSL_REDIRECT, CONFIG_SECURE_PROXY_SSL_HEADER
+from .config import (
+    CONFIG_DEBUG, CONFIG_SECRET_KEY, CONFIG_SECURE_SSL_REDIRECT,
+    CONFIG_SECURE_PROXY_SSL_HEADER)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -107,7 +109,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-SIMPLE_JWT= {
+SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
     'ROTATE_REFRESH_TOKENS': True,
@@ -132,5 +134,3 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = CONFIG_SECURE_SSL_REDIRECT
     SESSION_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 259200
-    
-    
