@@ -5,4 +5,3 @@ from .models import Visit
 @admin.register(Visit)
 class VisitAdmin(admin.ModelAdmin):
 	list_display = ("date", "visits", "ips")
-	

@@ -1,12 +1,11 @@
-from django.shortcuts import render
 from django.utils import timezone
 from .models import Visit
 from django.shortcuts import get_object_or_404
-from .serializers import VisitSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import permissions, status, viewsets, generics
+from rest_framework import permissions, status
 import calendar
+
 
 class VisitsYearView(APIView):
 	permissin_classes = (permissions.IsAdminUser, )
@@ -18,10 +17,13 @@ class VisitsYearView(APIView):
 		elif year < cur_year:
 			months = 12
 		elif year > cur_year:
-			return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "given year not reached yet."})
+			return Response(
+				status=status.HTTP_400_BAD_REQUEST,
+				data={"detail": "given year not reached yet."})
+
 		cur_month_visits = {}
 		for month in range(1, months+1):
-			if not month in cur_month_visits.keys():
+			if month not in cur_month_visits.keys():
 				cur_month_visits[calendar.month_name[month]] = 0
 			year_visit = list(Visit.objects.filter(date__year=year, date__month=month).values_list("visits", flat=True))
 			cur_month_visits[calendar.month_name[month]] += sum(year_visit)
@@ -39,9 +41,14 @@ class VisitsMonthView(APIView):
 		mnt = month
 		if year == cur_year:
 			if month > cur_month:
-				return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "requested month not reached yet."})
+				return Response(
+					status=status.HTTP_400_BAD_REQUEST,
+					data={"detail": "requested month not reached yet."})
+
 		elif year > cur_year:
-			return Response(status=status.HTTP_400_BAD_REQUEST, data={"detail": "requested year not reached yet."})
+			return Response(
+				status=status.HTTP_400_BAD_REQUEST,
+				data={"detail": "requested year not reached yet."})
 		n, day_in_cur_month = calendar.monthrange(year, mnt)
 		visits_in_month = {}
 		if month == cur_month:
@@ -51,11 +58,11 @@ class VisitsMonthView(APIView):
 			try:
 				month_visit = Visit.objects.get(date__year=year, date__month=mnt, date__day=day)
 				visits_in_month["{0}-{1}-{2}".format(year, month, day)] = month_visit.visits
-			except Visit.DoesNotExist as er:
+			except Visit.DoesNotExist:
 				pass
 
-
 		return Response(status=status.HTTP_200_OK, data=visits_in_month)
+
 
 class VisitorsView(APIView):
 	permissin_classes = (permissions.IsAdminUser, )
@@ -63,4 +70,3 @@ class VisitorsView(APIView):
 	def get(self, request, year, month, day, format=None):
 		visit = get_object_or_404(Visit, date__year=year, date__month=month, date__day=day)
 		return Response(status=status.HTTP_200_OK, data=visit.ips)
-	
