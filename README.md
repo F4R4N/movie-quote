@@ -25,8 +25,8 @@ a api made by django rest framework serve movie and series quotes.
 ## Usage
 use the following path's to get the quotes.
 
-### /v1/quote/
+### `/v1/quote/`
 get a random quote each time, from all quotes.
 
-### /v1/shows/<show_slug>
+### `/v1/shows/<show_slug>`
 you can get a random quote from the desired show. you can find list of show's slug in https://movie-quote-api.herokuapp.com/.
