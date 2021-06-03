@@ -1,7 +1,7 @@
 # movie-quote
 a api made with django rest framework serve movie and series quotes. you can find the api [Here](https://movie-quote-api.herokuapp.com).
 
-## Installation
+## Run locally
 ### Linux
 1. `git clone https://github.com/F4R4N/movie-quote.git`
 2. `apt install python3`
@@ -35,3 +35,6 @@ you can get a random quote from the desired show. you can find list of show's sl
 
 ### `/v1/shows/`
 get list of available shows slugs.
+
+## make this repo better
+feel free to open `issue` or `pull request` I am trying to make repo better and this will help me.
