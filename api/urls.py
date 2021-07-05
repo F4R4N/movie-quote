@@ -1,14 +1,15 @@
-from django.urls import path
+from django.urls import path, re_path
 from .views import (
 	MainPage, SpecificShowQuotes, AdminQuoteView, AdminDeleteUserView,
 	AdminEditQuoteView, AdminUserView, AdminEditUserView, UserQuoteView,
-	AdminEditShowView, AdminEditRoleView, AdminAllShowsView, AdminAllRolesView)
+	AdminEditShowView, AdminEditRoleView, AdminAllShowsView, AdminAllRolesView, )
 
 
 app_name = 'api'
 urlpatterns = [
 	path('', MainPage.as_view()),
 	path("v1/quote/", UserQuoteView.as_view()),
+	re_path(r"^v1/quote/(?P<censored>)/$", UserQuoteView.as_view()),
 	path('v1/shows/<slug:slug>/', SpecificShowQuotes.as_view()),
 
 	path("v1/admin/quote/", AdminQuoteView.as_view()),
