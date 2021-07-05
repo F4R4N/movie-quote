@@ -1,5 +1,4 @@
 venv/
-api/migrations/
 api/__pycache__/
 auth/__pycache__/
 config/__pycache__/
