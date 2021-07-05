@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 class QuoteSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Quote
-		fields = ("quote", 'role', "show")
+		fields = ("quote", 'role', "show", "contain_adult_lang")
 	role = serializers.CharField(source="role.name")
 	show = serializers.CharField(source="show.name")
 
@@ -40,10 +40,13 @@ class AdminAddUserSerializer(serializers.ModelSerializer):
 	def validate(self, attrs):
 		if self.context['request'].user.username != "faran":
 			raise serializers.ValidationError(
-				{"detail": "you dont have permission to perform this action", "hint": "contact user 'faran'"})
+				{
+					"detail": "you dont have permission to perform this action",
+					"hint": "contact user 'faran'"})
 
 		if attrs['password2'] != attrs["password1"]:
-			raise serializers.ValidationError({"password": "password fields dont match"})
+			raise serializers.ValidationError(
+				{"password": "password fields dont match"})
 		return attrs
 
 	def create(self, validated_data):
@@ -80,7 +83,7 @@ class AdminQuoteSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Quote
-		fields = ("key", "quote", "role", "show")
+		fields = ("key", "quote", "role", "show", "contain_adult_lang")
 
 	def create(self, validated_data):
 		role_name = validated_data.get("role").title()
@@ -96,6 +99,7 @@ class AdminQuoteSerializer(serializers.ModelSerializer):
 		quote = Quote.objects.create(
 			quote=validated_data['quote'],
 			show=show,
-			role=role
+			role=role,
+			contain_adult_lang=validated_data["contain_adult_lang"],
 		)
 		return quote

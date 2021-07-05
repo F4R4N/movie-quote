@@ -37,8 +37,11 @@ class Role(models.Model):
 class Quote(models.Model):
 	key = models.CharField(default=random_key, max_length=10, unique=True)
 	quote = models.CharField(max_length=500, unique=True)
-	show = models.ForeignKey(Show, on_delete=models.DO_NOTHING, related_name="show")
-	role = models.ForeignKey(Role, on_delete=models.DO_NOTHING, related_name="role")
+	show = models.ForeignKey(
+		Show, on_delete=models.DO_NOTHING, related_name="show")
+	role = models.ForeignKey(
+		Role, on_delete=models.DO_NOTHING, related_name="role")
+	contain_adult_lang = models.BooleanField(verbose_name="Contain adult language", default=False)
 
 	def __str__(self):
 		return str(self.key)
