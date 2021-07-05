@@ -14,7 +14,7 @@ except ImportError:
     CONFIG_DEBUG = int(os.environ.get("CONFIG_DEBUG", 1))
     
 SECRET_KEY = CONFIG_SECRET_KEY
-DEBUG = CONFIG_DEBUG
+DEBUG = bool(CONFIG_DEBUG)
 
 
 ALLOWED_HOSTS = os.environ.get("CONFIG_ALLOWED_HOSTS").split(", ")
@@ -101,6 +101,12 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     # 'DEFAULT_RENDERER_CLASSES': [
