@@ -1,14 +1,18 @@
 from pathlib import Path
 from datetime import timedelta
-from .config import (
-    CONFIG_DEBUG, CONFIG_SECRET_KEY, CONFIG_SECURE_SSL_REDIRECT,
-    CONFIG_SECURE_PROXY_SSL_HEADER)
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+try:
+    from .config import (
+        CONFIG_DEBUG, CONFIG_SECRET_KEY, CONFIG_SECURE_SSL_REDIRECT,
+        CONFIG_SECURE_PROXY_SSL_HEADER)
+except ImportError:
+    CONFIG_SECRET_KEY = str(os.environ.get("CONFIG_SECRET_KEY"))
+    CONFIG_DEBUG = int(os.environ.get("CONFIG_DEBUG", 1))
+    
 SECRET_KEY = CONFIG_SECRET_KEY
-
 DEBUG = CONFIG_DEBUG
 
 
