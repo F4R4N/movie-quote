@@ -17,7 +17,7 @@ from statistic.utils import add_or_create_visit
 
 
 class MainPage(APIView):
-	""" show developers info instead of 404 at the main page. """
+	"""Show developers info instead of 404 at the main page"""
 	permission_classes = (permissions.AllowAny, )
 
 	def get(self, request, format=None):
@@ -29,29 +29,38 @@ class MainPage(APIView):
 			"Github": "https://github.com/F4R4N",
 			"Show-Slugs": all_shows,
 			"Paths": [
-				"v1/quote/"
-				"v1/shows/<Show-Slugs>"
+				"v1/quote/",
+				"v1/shows/<Show-Slugs>",
+				"v1/quote/censored/"
 			]
 		}
 		return Response(status=status.HTTP_200_OK, data=data)
 
 
 class UserQuoteView(APIView):
-	""" show a random quote to the user. """
+	"""Show a random quote to the user"""
 	permission_classes = (permissions.AllowAny, )
 
 	def get(self, request, format=None):
 		ip = get_client_ip(request)
 		add_or_create_visit(ip)
-		all_quotes = Quote.objects.all().values_list('pk', flat=True)
-		quote_pk = random.choice(all_quotes)
+		if "censored" in request.query_params:
+
+			all_quotes = Quote.objects.filter(contain_adult_lang=False).values_list('pk', flat=True)
+		else:
+			all_quotes = Quote.objects.all().values_list('pk', flat=True)
+
+		try:
+			quote_pk = random.choice(all_quotes)
+		except IndexError:
+			return Response(status=status.HTTP_200_OK, data={"detail": "No quote available please try again later.", "status": "no-quote"})
 		quote = get_object_or_404(Quote, pk=quote_pk)
 		serializer = QuoteSerializer(instance=quote)
 		return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-
 class SpecificShowQuotes(APIView):
-	""" show a random quote from the given slug show (shows slug are listed in the mainpage)."""
+	"""Show a random quote from the given slug show (shows slug are listed in
+	 the mainpage)"""
 	permission_classes = (permissions.AllowAny, )
 
 	def get(self, request, slug, format=None):
@@ -59,7 +68,7 @@ class SpecificShowQuotes(APIView):
 		if not requested_show.show.all().exists():
 			return Response(
 				status=status.HTTP_204_NO_CONTENT,
-				data={"detail": "no quote for this show yet."})
+				data={"detail": "no quote for this show yet.", "status": "no-quote-for-show"})
 
 		all_requested_show_quotes = requested_show.show.all().values_list('pk', flat=True)
 		quote_pk = random.choice(all_requested_show_quotes)
