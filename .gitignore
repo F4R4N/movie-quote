@@ -11,4 +11,6 @@ test*
 diff*
 statistic/__pycache__/
 statistic/migrations/
+workspace.code-workspace
+env.cmd
 
