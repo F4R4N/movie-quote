@@ -8,12 +8,16 @@ django-cors-headers==3.7.0
 djangorestframework==3.12.2
 djangorestframework-simplejwt==4.3.0
 drf-yasg==1.20.0
+flake8==3.9.2
 idna==2.10
 inflection==0.5.1
 itypes==1.2.0
 Jinja2==2.11.3
 MarkupSafe==1.1.1
+mccabe==0.6.1
 packaging==20.9
+pycodestyle==2.7.0
+pyflakes==2.3.1
 PyJWT==1.7.1
 pyparsing==2.4.7
 pytz==2021.1
