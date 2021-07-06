@@ -17,6 +17,5 @@ diff*
 # vscode editor
 movie-quote.code-workspace
 .vscode/
-# settings store as environment variables
-env.cmd
+
 
