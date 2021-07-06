@@ -1,15 +1,22 @@
+# python virtual environment
 venv/
+# python __pycache__ directories
 api/__pycache__/
 auth/__pycache__/
 config/__pycache__/
+statistic/__pycache__/
+# test databases
 *.sqlite3
+# test configs
 config/config.py
+# django test dumpdata's
 Backups/
 test*
-.vscode/
+# saved git diff in file
 diff*
-statistic/__pycache__/
-statistic/migrations/
+# vscode editor
 workspace.code-workspace
+.vscode/
+# settings store as environment variables
 env.cmd
 
