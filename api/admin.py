@@ -5,7 +5,8 @@ from .models import Quote, Role, Show
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
 	list_display = ('key', 'quote', 'show', 'role', "id", "contain_adult_lang", )
-	list_editable_link = ("quote", "contain_adult_lang", )
+	list_editable_link = ("quote", )
+	list_editable = ("contain_adult_lang", )
 
 
 @admin.register(Show)
