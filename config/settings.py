@@ -11,7 +11,9 @@ try:
         CONFIG_SECURE_PROXY_SSL_HEADER)
 except ImportError:
     CONFIG_SECRET_KEY = str(os.environ.get("CONFIG_SECRET_KEY"))
-    CONFIG_DEBUG = int(os.environ.get("CONFIG_DEBUG", 1))
+    CONFIG_DEBUG = int(os.environ.get("CONFIG_DEBUG", 0))
+    CONFIG_SECURE_SSL_REDIRECT = int(os.environ.get("CONFIG_SECURE_SSL_REDIRECT", 1))
+    CONFIG_SECURE_PROXY_SSL_HEADER = tuple(os.environ.get("CONFIG_SECURE_PROXY_SSL_HEADER").split(", "))
     
 SECRET_KEY = CONFIG_SECRET_KEY
 DEBUG = bool(CONFIG_DEBUG)
