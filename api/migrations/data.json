@@ -2,7 +2,6 @@
    {
       "model": "admin.logentry",
       "fields": {
-         "content_type": 7,
          "user": 1,
          "action_time": "2021-03-24T13:30:30.491Z",
          "action_flag": 1,
