@@ -1,2 +1,2 @@
 web: gunicorn config.wsgi
-worker: python report.py
+worker: python statistic/report.py
