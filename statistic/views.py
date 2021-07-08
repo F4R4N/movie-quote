@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
 import calendar
+from .utils import views_in_month
 
 
 class VisitsYearView(APIView):
@@ -35,33 +36,8 @@ class VisitsMonthView(APIView):
 	permissin_classes = (permissions.IsAdminUser, )
 
 	def get(self, request, year, month, foramt=None):
-		cur_year = timezone.now().year
-		cur_month = timezone.now().month
-		cur_day = timezone.now().day
-		mnt = month
-		if year == cur_year:
-			if month > cur_month:
-				return Response(
-					status=status.HTTP_400_BAD_REQUEST,
-					data={"detail": "requested month not reached yet."})
-
-		elif year > cur_year:
-			return Response(
-				status=status.HTTP_400_BAD_REQUEST,
-				data={"detail": "requested year not reached yet."})
-		n, day_in_cur_month = calendar.monthrange(year, mnt)
-		visits_in_month = {}
-		if month == cur_month:
-			day_in_cur_month = cur_day
-		for day in range(1, day_in_cur_month+1):
-			visits_in_month["{0}-{1}-{2}".format(year, month, day)] = 0
-			try:
-				month_visit = Visit.objects.get(date__year=year, date__month=mnt, date__day=day)
-				visits_in_month["{0}-{1}-{2}".format(year, month, day)] = month_visit.visits
-			except Visit.DoesNotExist:
-				pass
-
-		return Response(status=status.HTTP_200_OK, data=visits_in_month)
+		status, data, total_views = views_in_month(year, month)
+		return Response(status=status, data=data)
 
 
 class VisitorsView(APIView):
