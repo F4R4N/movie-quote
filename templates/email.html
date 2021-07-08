@@ -1,0 +1,48 @@
+<div style="font-family: Arial, Helvetica, sans-serif; color: #4c4c4c; text-align: center;">
+<h2><strong>Hi Dear <i>{{ username }}</i></strong>,</h2>
+<h3>this is <strong>'Movie Quote'</strong> app monthly report.</h3>
+<h3>report for <strong>{{ year }}</strong> / <strong>{{ month }}</strong></h3>
+<h3>Total Views in this month: <strong>{{ total_views }}</strong></h3>
+<br>
+<table style="font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; width: 70%; border-radius: 5px; margin-left: auto; margin-right: auto;">
+    <caption style="border: 1px solid #dddddd; text-align: center; padding: 12px; font-size: 24px; color: #4c4c4c;">Visits In Month Days</caption>
+    <tr>
+        <th style="border: 1px solid #dddddd; text-align: left; padding: 12px; font-size: 24px; color: #4c4c4c; width: 50%;">Date</th>
+        <th style="border: 1px solid #dddddd; text-align: left; padding: 12px; font-size: 24px; color: #4c4c4c; width: 50%;">Visit(s)</th>
+    </tr>
+{% for date, visits_count in views.items %}
+    <tr>
+        <td style="border: 1px solid #dddddd; text-align: left; padding: 12px 20px; font-size: 20px;color: #4c4c4c;">{{ date }}</td>
+        <td style="border: 1px solid #dddddd; text-align: left; padding: 12px 20px;"><strong>{{ visits_count }}</strong></td>
+    </tr>
+
+{% endfor %}
+</table>
+<br>
+<h1 style="font-family: Arial, Helvetica, sans-serif; color: #4c4c4c; text-align: center;">Visitors Info</h1>
+<hr>
+{% for visits in visitors_info %}
+<table style="font-family: Arial, Helvetica, sans-serif; border-collapse: collapse; width: 100%; border-radius: 5px; width: 70%; border-radius: 5px; margin-left: auto; margin-right: auto;">
+<tr>
+    <th colspan="3" style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 24px;color: #4c4c4c;">{{ visits.date }}</th>
+</tr>
+<tr>
+    <th colspan="3" style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 20px;color: #4c4c4c;">Visitors</th>
+</tr>
+<tr>
+    <th style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 15px;color: #4c4c4c; width: 33.333%;">IP</th>
+    <th style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 15px;color: #4c4c4c; width: 33.333%;">Location</th>
+    <th style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 15px;color: #4c4c4c; width: 33.333%;">Visits</th>
+</tr>
+{% for visit, obj in visits.visitors.items %}
+<tr>
+    <td style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 15px;color: #4c4c4c; width: 33.333%;">{{ visit }}</td>
+    <td style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 15px;color: #4c4c4c; width: 33.333%;">{{ obj.region }}</td>
+    <td style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 15px;color: #4c4c4c; width: 33.333%;">{{ obj.views }}</td>
+</tr>
+
+{% endfor %}
+</table>
+<br>
+{% endfor %}
+</div>
