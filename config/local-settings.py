@@ -43,7 +43,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -60,7 +60,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.sqlite3",
-        'NAME': "databse.sqlite3"
+        'NAME': os.path.join(BASE_DIR, "db.sqlite3")
     }
 }
 AUTH_PASSWORD_VALIDATORS = [
@@ -131,4 +131,11 @@ SWAGGER_SETTINGS = {
     }
 }
 CORS_ALLOW_ALL_ORIGINS = True
+IPSTACK_ACCESS_KEY = os.environ.get("IPSTACK_ACCESS_KEY")
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = os.environ.get("EMAIL_SMTP")
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("EMAIL_EMAIL")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD")
