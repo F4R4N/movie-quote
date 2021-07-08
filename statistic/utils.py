@@ -12,7 +12,7 @@ def add_or_create_visit(ip):
 		if ip in visit.visitors:
 			visit.visitors[ip]["views"] += 1
 		else:
-			visit.visitors[ip]["views"] = 1
+			visit.visitors[ip] = {"views": 1}
 			visit.visitors[ip]["region"] = get_user_country_by_ip(ip)
 		visit.save()
 	except Visit.DoesNotExist:
