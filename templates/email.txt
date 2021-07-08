@@ -1,0 +1,20 @@
+Hi Dear {{ username }},
+this is 'Movie Quote' app monthly report.
+report for {{ year }} / {{ month }}
+
+Total Views in this month: {{ total_views }}
+
+{% for date, visits_count in views.items %}
+{{ date }} : {{ visits_count }}
+{% endfor %}
+{% for visits in visitors_info %}===================================
+Date: {{ visits.date }}
+Total Visits: {{ visits.visits }}
+
+Visitors:
+--------------------{% for visit, obj in visits.visitors.items %}
+IP: {{ visit }}
+Location: {{ obj.region }}
+Visists Count: {{ obj.views }}
+--------------------{% endfor %}
+{% endfor %}
