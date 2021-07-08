@@ -5,20 +5,16 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-try:
-    from .config import (
-        CONFIG_DEBUG, CONFIG_SECRET_KEY, CONFIG_SECURE_SSL_REDIRECT,
-        CONFIG_SECURE_PROXY_SSL_HEADER)
-except ImportError:
-    CONFIG_SECRET_KEY = str(os.environ.get("CONFIG_SECRET_KEY"))
-    CONFIG_DEBUG = int(os.environ.get("CONFIG_DEBUG", 0))
-    CONFIG_SECURE_SSL_REDIRECT = int(os.environ.get("CONFIG_SECURE_SSL_REDIRECT", 1))
-    CONFIG_SECURE_PROXY_SSL_HEADER = tuple(os.environ.get("CONFIG_SECURE_PROXY_SSL_HEADER").split(", "))
-    
-SECRET_KEY = CONFIG_SECRET_KEY
-DEBUG = bool(CONFIG_DEBUG)
+IPSTACK_ACCESS_KEY = os.environ.get("IPSTACK_ACCESS_KEY")
 
+EMAIL_HOST = os.environ.get("CONFIG_EMAIL_HOST")
+EMAIL_HOST_USER = os.environ.get("CONFIG_EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("CONFIG_EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
 
+SECRET_KEY = str(os.environ.get("CONFIG_SECRET_KEY"))
+DEBUG = bool(int(os.environ.get("CONFIG_DEBUG", 0)))
 ALLOWED_HOSTS = os.environ.get("CONFIG_ALLOWED_HOSTS", []).split(", ")
 
 INSTALLED_APPS = [
@@ -53,7 +49,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -146,7 +142,10 @@ SWAGGER_SETTINGS = {
 }
 CORS_ALLOW_ALL_ORIGINS = True
 if not DEBUG:
-    SECURE_PROXY_SSL_HEADER = CONFIG_SECURE_PROXY_SSL_HEADER
-    SECURE_SSL_REDIRECT = CONFIG_SECURE_SSL_REDIRECT
     SESSION_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 259200
+    # redirect HTTP request to HTTPS
+    SECURE_SSL_REDIRECT = bool(int(os.environ.get("CONFIG_SECURE_SSL_REDIRECT", 1)))
+    SECURE_PROXY_SSL_HEADER = tuple(os.environ.get("CONFIG_SECURE_PROXY_SSL_HEADER").split(", "))
+
+CELERY_TIMEZONE = "Asia/Tehran"
