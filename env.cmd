@@ -1,4 +1,4 @@
-:: this is a sample of environment variable use for deployment
+:: this is a sample of environment variable use for deployment run "cmd /C env.cmd" to activate
 SET CONFIG_SECRET_KEY=secret_key
 SET CONFIG_DEBUG=0
 SET CONFIG_SECURE_SSL_REDIRECT=1
@@ -9,3 +9,5 @@ SET DB_USER=db_user
 SET DB_PASSWORD=db_password
 SET DB_HOST=db_hostname
 SET DB_PORT=db_port
+SET IPSTACK_ACCESS_KEY=your_access_key
+echo "all environment variables are set"
