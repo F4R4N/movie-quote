@@ -11,7 +11,7 @@ from statistic.report import monthly_report
 while True:
     cur_year, cur_month = datetime.datetime.now().year, datetime.datetime.now().month
     _, day_in_cur_month = calendar.monthrange(cur_year, cur_month)
-    if datetime.datetime.now().strftime("%Y%m%d%H%M%S") == datetime.datetime(datetime.datetime.now().year, datetime.datetime.now().month, 8, 23, 7, 59).strftime("%Y%m%d%H%M%S"):
+    if datetime.datetime.now().strftime("%Y%m%d%H%M%S") == datetime.datetime(datetime.datetime.now().year, datetime.datetime.now().month, 9, 13, 48, 59).strftime("%Y%m%d%H%M%S"):
         monthly_report()
         time.sleep(1)
     else:
