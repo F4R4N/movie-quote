@@ -1,7 +1,7 @@
 amqp==5.0.6
+APScheduler==3.7.0
 asgiref==3.3.1
 billiard==3.6.4.0
-celery==5.1.2
 certifi==2020.12.5
 chardet==4.0.0
 click==7.1.2
@@ -37,6 +37,7 @@ ruamel.yaml==0.16.13
 ruamel.yaml.clib==0.2.2
 six==1.16.0
 sqlparse==0.4.1
+tzlocal==2.1
 uritemplate==3.0.1
 urllib3==1.26.4
 vine==5.0.0
