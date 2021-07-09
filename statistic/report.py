@@ -1,8 +1,3 @@
-import os
-import django
-os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings"
-django.setup()
-
 from datetime import datetime
 from statistic.models import Visit
 from statistic.utils import views_in_month
@@ -37,5 +32,3 @@ def monthly_report():
         msg.attach_alternative(html_context, "text/html")
         msg.send(fail_silently=False)
     print("Report sent")
-
-
