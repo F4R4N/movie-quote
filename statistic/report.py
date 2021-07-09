@@ -31,4 +31,4 @@ def monthly_report():
         msg = EmailMultiAlternatives(subject=subject, body=text_context, from_email="pythontestsendingemail@gmail.com", to=[admin.email])
         msg.attach_alternative(html_context, "text/html")
         msg.send(fail_silently=False)
-    print("Report sent")
+    print("[{}] Report sent".format(datetime.now().strftime("%Y-%m-%d-%H:%M:%S.%f")))
