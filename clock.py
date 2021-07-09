@@ -8,9 +8,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 sched = BlockingScheduler()
 
-# @sched.scheduled_job("cron", year="*", month='*', day="last", hour=23, minutes=59)
-@sched.scheduled_job("interval", minutes=1)
+@sched.scheduled_job("cron", year="*", month='*', day=9, hour=17, minutes=43)
 def send_report():
-    call_command("migrate")
+    call_command("monthly_report")
 
 sched.start()
