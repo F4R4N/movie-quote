@@ -5,6 +5,6 @@ sched = BlockingScheduler()
 # @sched.scheduled_job("cron", year="*", month='*', day="last", hour=23, minute=59)
 @sched.scheduled_job("interval", minutes=1)
 def send_report():
-    call_command("monthly_report")
+    call_command("migrate")
 
 sched.start()
