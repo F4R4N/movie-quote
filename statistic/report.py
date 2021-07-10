@@ -46,6 +46,7 @@ def monthly_report():
             ) from ex
 
     log = "[{}] Report sent".format(
-        datetime.now().strftime("%Y-%m-%d-%H:%M:%S.%f"))
+        datetime.now().strftime("%Y-%m-%d-%H:%M:%S.%f")
+    )
 
     print(log)
