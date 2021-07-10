@@ -39,9 +39,11 @@ def monthly_report():
         msg.attach_alternative(html_context, "text/html")
         try:
             msg.send(fail_silently=False)
-        except Exception:
-            raise Exception("not able to send Email. its probably\
-            smtp security blocking this action")
+        except Exception as ex:
+            raise Exception(
+                "not able to send Email."
+                " its probably smtp security modules blocking this action"
+            ) from ex
 
     log = "[{}] Report sent".format(
         datetime.now().strftime("%Y-%m-%d-%H:%M:%S.%f"))
