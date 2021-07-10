@@ -1,6 +1,7 @@
-from statistic.serializers import VisitByMonthSerializer
 from django.urls import path
-from .views import VisitsYearView, VisitsMonthView, VisitorsViewByDay, VisitorsViewByMonth
+from .views import (
+	VisitsYearView, VisitsMonthView, VisitorsViewByDay, VisitorsViewByMonth
+)
 
 app_name = "statistic"
 
