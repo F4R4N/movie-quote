@@ -3,7 +3,7 @@ from django.db import models
 
 class Visit(models.Model):
 	visits = models.PositiveIntegerField(default=0)
-	date = models.DateField(auto_now=True, unique=True)  # deployment
+	date = models.DateField(auto_now_add=True, unique=True)  # deployment
 	visitors = models.JSONField(blank=True, null=True)
 	# date = models.DateField(unique=True)  # development
 
