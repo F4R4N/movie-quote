@@ -14,12 +14,12 @@ def add_or_create_visit(ip):
 			visit.visitors[ip]["views"] += 1
 		else:
 			visit.visitors[ip] = {"views": 1}
-			visit.visitors[ip]["region"] = get_user_country_by_ip(ip)
+			visit.visitors[ip]["location"] = get_user_country_by_ip(ip)
 		visit.save()
 	except Visit.DoesNotExist:
 		visit = Visit.objects.create(
 			visits=1, visitors={
-				ip: {"views": 1, "region": get_user_country_by_ip(ip), }
+				ip: {"views": 1, "location": get_user_country_by_ip(ip), }
 			}
 		)
 
