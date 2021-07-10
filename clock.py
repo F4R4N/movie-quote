@@ -9,8 +9,7 @@ django.setup()
 sched = BlockingScheduler()
 
 
-# @sched.scheduled_job("cron", year="*", month='*', day="*", hour=8, minute=0)
-@sched.scheduled_job("interval", minutes=1)
+@sched.scheduled_job("cron", year="*", month='*', day="*", hour=23, minute=2)
 def send_report():
     call_command("monthly_report")
 
