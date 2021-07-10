@@ -9,7 +9,7 @@ from .utils import views_in_month
 
 
 class VisitsYearView(APIView):
-	permissin_classes = (permissions.IsAdminUser, )
+	permission_classes = (permissions.IsAdminUser, )
 
 	def get(self, request, year, format=None):
 		cur_year = timezone.now().year
@@ -23,17 +23,20 @@ class VisitsYearView(APIView):
 				data={"detail": "given year not reached yet."})
 
 		cur_month_visits = {}
-		for month in range(1, months+1):
+		for month in range(1, months + 1):
 			if month not in cur_month_visits.keys():
 				cur_month_visits[calendar.month_name[month]] = 0
-			year_visit = list(Visit.objects.filter(date__year=year, date__month=month).values_list("visits", flat=True))
+			year_visit = list(
+				Visit.objects.filter(
+					date__year=year, date__month=month).values_list("visits", flat=True))
+
 			cur_month_visits[calendar.month_name[month]] += sum(year_visit)
 
 		return Response(status=status.HTTP_200_OK, data=cur_month_visits)
 
 
 class VisitsMonthView(APIView):
-	permissin_classes = (permissions.IsAdminUser, )
+	permission_classes = (permissions.IsAdminUser, )
 
 	def get(self, request, year, month, foramt=None):
 		status, data, total_views = views_in_month(year, month)
@@ -41,8 +44,10 @@ class VisitsMonthView(APIView):
 
 
 class VisitorsView(APIView):
-	permissin_classes = (permissions.IsAdminUser, )
+	permission_classes = (permissions.IsAdminUser, )
 
 	def get(self, request, year, month, day, format=None):
-		visit = get_object_or_404(Visit, date__year=year, date__month=month, date__day=day)
+		visit = get_object_or_404(
+			Visit, date__year=year, date__month=month, date__day=day)
+
 		return Response(status=status.HTTP_200_OK, data=visit.ips)
