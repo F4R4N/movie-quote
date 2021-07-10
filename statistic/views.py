@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions, status
 import calendar
+from .serializers import VisitByMonthSerializer
 from .utils import views_in_month
 
 
@@ -43,11 +44,21 @@ class VisitsMonthView(APIView):
 		return Response(status=status, data=data)
 
 
-class VisitorsView(APIView):
+class VisitorsViewByDay(APIView):
 	permission_classes = (permissions.IsAdminUser, )
 
 	def get(self, request, year, month, day, format=None):
 		visit = get_object_or_404(
 			Visit, date__year=year, date__month=month, date__day=day)
 
-		return Response(status=status.HTTP_200_OK, data=visit.ips)
+		return Response(status=status.HTTP_200_OK, data=visit.visitors)
+
+
+class VisitorsViewByMonth(APIView):
+	permission_classes = (permissions.IsAdminUser, )
+
+	def get(self, request, year, month, format=None):
+		visits = Visit.objects.filter(date__year=year, date__month=month)
+		serializer = VisitByMonthSerializer(instance=visits, many=True)
+		print(serializer.data)
+		return Response(status=status.HTTP_200_OK, data=serializer.data)

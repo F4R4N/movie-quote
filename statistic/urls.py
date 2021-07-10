@@ -1,5 +1,6 @@
+from statistic.serializers import VisitByMonthSerializer
 from django.urls import path
-from .views import VisitsYearView, VisitsMonthView, VisitorsView
+from .views import VisitsYearView, VisitsMonthView, VisitorsViewByDay, VisitorsViewByMonth
 
 app_name = "statistic"
 
@@ -11,6 +12,12 @@ urlpatterns = [
 
 	path(
 		"admin/statistic/visitors/<int:year>/<int:month>/<int:day>/",
-		VisitorsView.as_view()),
+		VisitorsViewByDay.as_view()
+	),
+
+	path(
+		"admin/statistic/visitors/<int:year>/<int:month>/",
+		VisitorsViewByMonth.as_view()
+	),
 
 ]
