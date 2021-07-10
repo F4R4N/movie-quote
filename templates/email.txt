@@ -15,6 +15,6 @@ Visitors:
 --------------------{% for visit, obj in visits.visitors.items %}
 IP: {{ visit }}
 Location: {{ obj.region }}
-Visists Count: {{ obj.views }}
+Visits Count: {{ obj.views }}
 --------------------{% endfor %}
 {% endfor %}
