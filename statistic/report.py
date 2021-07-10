@@ -15,7 +15,9 @@ def monthly_report():
     # send html email
     plaintext = get_template('email.txt')
     html = get_template('email.html')
-    admins = User.objects.filter(is_staff=True, is_active=True, is_superuser=True, )
+    admins = User.objects.filter(
+        is_staff=True, is_active=True, is_superuser=True, )
+
     context = {
         "year": cur_year,
         "month": cur_month,
@@ -28,7 +30,20 @@ def monthly_report():
         context["username"] = admin.username
         text_context = plaintext.render(context)
         html_context = html.render(context)
-        msg = EmailMultiAlternatives(subject=subject, body=text_context, from_email="pythontestsendingemail@gmail.com", to=[admin.email])
+        msg = EmailMultiAlternatives(
+            subject=subject,
+            body=text_context,
+            from_email="pythontestsendingemail@gmail.com", to=[admin.email]
+        )
+
         msg.attach_alternative(html_context, "text/html")
-        msg.send(fail_silently=False)
-    print("[{}] Report sent".format(datetime.now().strftime("%Y-%m-%d-%H:%M:%S.%f")))
+        try:
+            msg.send(fail_silently=False)
+        except Exception:
+            raise Exception("not able to send Email. its probably\
+            smtp security blocking this action")
+
+    log = "[{}] Report sent".format(
+        datetime.now().strftime("%Y-%m-%d-%H:%M:%S.%f"))
+
+    print(log)

@@ -145,7 +145,11 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 259200
     # redirect HTTP request to HTTPS
-    SECURE_SSL_REDIRECT = bool(int(os.environ.get("CONFIG_SECURE_SSL_REDIRECT", 1)))
-    SECURE_PROXY_SSL_HEADER = tuple(os.environ.get("CONFIG_SECURE_PROXY_SSL_HEADER").split(", "))
+    SECURE_SSL_REDIRECT = bool(
+        int(os.environ.get("CONFIG_SECURE_SSL_REDIRECT", 1)))
+
+    SECURE_PROXY_SSL_HEADER = tuple(
+        os.environ.get("CONFIG_SECURE_PROXY_SSL_HEADER").split(", ")
+    )
 
 CELERY_TIMEZONE = "Asia/Tehran"

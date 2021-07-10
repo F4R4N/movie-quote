@@ -41,12 +41,12 @@ class AdminAddUserSerializer(serializers.ModelSerializer):
 		if self.context['request'].user.username != "faran":
 			raise serializers.ValidationError(
 				{
-					"detail": "you dont have permission to perform this action",
+					"detail": "you don't have permission to perform this action",
 					"hint": "contact user 'faran'"})
 
 		if attrs['password2'] != attrs["password1"]:
 			raise serializers.ValidationError(
-				{"password": "password fields dont match"})
+				{"password": "password fields don't match"})
 		return attrs
 
 	def create(self, validated_data):

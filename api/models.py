@@ -41,7 +41,8 @@ class Quote(models.Model):
 		Show, on_delete=models.DO_NOTHING, related_name="show")
 	role = models.ForeignKey(
 		Role, on_delete=models.DO_NOTHING, related_name="role")
-	contain_adult_lang = models.BooleanField(verbose_name="Contain adult language", default=False)
+	contain_adult_lang = models.BooleanField(
+		verbose_name="Contain adult language", default=False)
 
 	def __str__(self):
 		return str(self.key)

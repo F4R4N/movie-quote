@@ -31,7 +31,7 @@ use the following path's to get the quotes.
 get a random quote each time, from all quotes.
 
 ### `/v1/quote?censored`
-dont show quotes which contain adult language.
+don't show quotes which contain adult language.
 
 ### `/v1/shows/<show_slug>`
 you can get a random quote from the desired show. you can find list of show's slug in https://movie-quote-api.herokuapp.com/v1/shows/.

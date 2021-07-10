@@ -46,21 +46,30 @@ class UserQuoteView(APIView):
 		add_or_create_visit(ip)
 		if "censored" in request.query_params:
 
-			all_quotes = Quote.objects.filter(contain_adult_lang=False).values_list('pk', flat=True)
+			all_quotes = Quote.objects.filter(
+				contain_adult_lang=False).values_list('pk', flat=True)
 		else:
 			all_quotes = Quote.objects.all().values_list('pk', flat=True)
 
 		try:
 			quote_pk = random.choice(all_quotes)
 		except IndexError:
-			return Response(status=status.HTTP_200_OK, data={"detail": "No quote available please try again later.", "status": "no-quote"})
+			return Response(
+				status=status.HTTP_200_OK,
+				data={
+					"detail": "No quote available please try again later.",
+					"status": "no-quote"
+				}
+			)
+
 		quote = get_object_or_404(Quote, pk=quote_pk)
 		serializer = QuoteSerializer(instance=quote)
 		return Response(status=status.HTTP_200_OK, data=serializer.data)
 
+
 class SpecificShowQuotes(APIView):
 	"""Show a random quote from the given slug show (shows slug are listed in
-	 the mainpage)"""
+	the mainpage)"""
 	permission_classes = (permissions.AllowAny, )
 
 	def get(self, request, slug, format=None):
@@ -68,9 +77,15 @@ class SpecificShowQuotes(APIView):
 		if not requested_show.show.all().exists():
 			return Response(
 				status=status.HTTP_204_NO_CONTENT,
-				data={"detail": "no quote for this show yet.", "status": "no-quote-for-show"})
+				data={
+					"detail": "no quote for this show yet.",
+					"status": "no-quote-for-show"
+				}
+			)
 
-		all_requested_show_quotes = requested_show.show.all().values_list('pk', flat=True)
+		all_requested_show_quotes = requested_show.show.all().values_list(
+			'pk', flat=True)
+
 		quote_pk = random.choice(all_requested_show_quotes)
 		quote = get_object_or_404(Quote, pk=quote_pk)
 		serializer = QuoteSerializer(instance=quote)
@@ -131,7 +146,11 @@ class AdminEditShowView(APIView):
 		if "name" not in request.data:
 			return Response(
 				status=status.HTTP_400_BAD_REQUEST,
-				data={"detail": "no new data provided.", "name": "this field is required."})
+				data={
+					"detail": "no new data provided.",
+					"name": "this field is required."
+				}
+			)
 
 		show = get_object_or_404(Show, slug=slug)
 		show.name = request.data["name"]
@@ -154,7 +173,11 @@ class AdminEditRoleView(APIView):
 		if "name" not in request.data:
 			return Response(
 				status=status.HTTP_400_BAD_REQUEST,
-				data={"detail": "no new data provided.", "name": "this field is required."})
+				data={
+					"detail": "no new data provided.",
+					"name": "this field is required."
+				}
+			)
 
 		role = get_object_or_404(Role, slug=slug)
 		role.name = request.data["name"]
@@ -172,7 +195,8 @@ class AdminAllRolesView(generics.ListAPIView):
 class AdminUserView(generics.ListCreateAPIView):
 	"""
 	GET return all users (admin only).
-	POST add new user (admin only) [username, first_name, last_name, email, password1, password2](only main superuser can make user)
+	POST add new user (admin only) [username, first_name, last_name, email,
+	password1, password2](only main superuser can make user)
 
 	"""
 
@@ -183,9 +207,12 @@ class AdminUserView(generics.ListCreateAPIView):
 
 class AdminEditUserView(APIView):
 	"""
-	edit user credintials (every user can edit itselves profile.
+	edit user credentials (every user can edit itselves profile.
 	also mainsuperuser (default faran) can edit every users profile.).
-	it should include at least one of : [first_name, last_name, username, email, (together [password1,password2]), (only main superuser can modify this [is_superuser, is_active, is_staff]) ]"""
+	it should include at least one of : [first_name, last_name, username, email,
+	(together [password1,password2]), (only main superuser can modify this
+	[is_superuser, is_active, is_staff]) ]"""
+
 	permission_classes = (permissions.IsAuthenticated, )
 
 	def put(self, request, pk, format=None):
@@ -194,7 +221,7 @@ class AdminEditUserView(APIView):
 			if not user.is_superuser and user.username != settings.MAINSUPERUSER:
 				return Response(
 					status=status.HTTP_401_UNAUTHORIZED,
-					data={"detail": "you dont have permission for this user"})
+					data={"detail": "you don't have permission for this user"})
 
 		instance = get_object_or_404(User, pk=pk)
 
@@ -227,7 +254,7 @@ class AdminEditUserView(APIView):
 			if request.data['password1'] != request.data["password2"]:
 				return Response(
 					status=status.HTTP_400_BAD_REQUEST,
-					data={"detail": "password fields dont match"})
+					data={"detail": "password fields don't match"})
 
 			try:
 				validate_password(request.data['password1'], user)
@@ -240,7 +267,11 @@ class AdminEditUserView(APIView):
 			if user.username != settings.MAINSUPERUSER:
 				return Response(
 					status=status.HTTP_401_UNAUTHORIZED,
-					data={"detail": "you dont have permission to perform this action, contact the admin user"})
+					data={
+						"detail": "you don't have permission to perform \
+						this action, contact the admin user"
+					}
+				)
 
 		if "is_superuser" in request.data:
 			instance.is_superuser = request.data["is_superuser"]
@@ -267,7 +298,7 @@ class AdminDeleteUserView(APIView):
 			if user != deletable_user:
 				return Response(
 					status=status.HTTP_400_BAD_REQUEST,
-					data={"detail": "you dont have permission for this user."})
+					data={"detail": "you don't have permission for this user."})
 
 		deletable_user.is_active = False
 		deletable_user.save()
