@@ -6,7 +6,8 @@ from django.conf import settings
 import calendar
 
 
-def add_or_create_visit(ip):
+def add_or_create_visit(ip: str):
+	"""Create Visit object if not already exists"""
 	try:
 		visit = Visit.objects.get(date=timezone.now().date())
 		visit.visits += 1
@@ -25,6 +26,7 @@ def add_or_create_visit(ip):
 
 
 def get_client_ip(request) -> str:
+	"""Extract client IP address from passed "request" object"""
 	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
 	if x_forwarded_for:
 		ip = x_forwarded_for.split(',')[0]
@@ -34,15 +36,16 @@ def get_client_ip(request) -> str:
 
 
 def get_user_country_by_ip(ip: str) -> str:
+	"""Send request to "ipstack" api and get user location by its IP address"""
 	api_key = settings.IPSTACK_ACCESS_KEY
-	print(api_key)
 	url = f"http://api.ipstack.com/{ip}?access_key={api_key}"
 	response = requests.get(url).json()
-	return "{0} {1}, {2}".format(
+	return "{0}, {1}, {2}".format(
 		response["country_name"], response["region_name"], response["city"])
 
 
-def views_in_month(year, month):
+def views_in_month(year: int, month: int) -> tuple:
+	"""Return total views and visits in current month"""
 	cur_year = timezone.now().year
 	cur_month = timezone.now().month
 	cur_day = timezone.now().day
