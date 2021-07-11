@@ -4,15 +4,15 @@ import os
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+# ipstack api access key
 IPSTACK_ACCESS_KEY = os.environ.get("IPSTACK_ACCESS_KEY")
-
+# email configs
 EMAIL_HOST = os.environ.get("CONFIG_EMAIL_HOST")
 EMAIL_HOST_USER = os.environ.get("CONFIG_EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("CONFIG_EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-
+# django configs
 SECRET_KEY = str(os.environ.get("CONFIG_SECRET_KEY"))
 DEBUG = bool(int(os.environ.get("CONFIG_DEBUG", 0)))
 ALLOWED_HOSTS = os.environ.get("CONFIG_ALLOWED_HOSTS", []).split(", ")
@@ -49,6 +49,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # path to load email templates
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -63,6 +64,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+# database configs
 DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.postgresql",
@@ -75,16 +77,20 @@ DATABASES = {
 }
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.\
+        UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.\
+        MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.\
+        CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.\
+        NumericPasswordValidator',
     },
 ]
 
@@ -95,7 +101,8 @@ TIME_ZONE = 'America/New_York'
 USE_I18N = True
 
 USE_L10N = True
-
+# disabled to solve bugs with statistic visit object creation and complicities
+# with different timezones
 USE_TZ = False
 
 STATIC_URL = '/static/'
@@ -120,16 +127,18 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
-
+# simplejwt configs
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }
+
 # change this when you made your user
 MAINSUPERUSER = "faran"
 
+# swagger configs
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
     'SECURITY_DEFINITIONS': {
@@ -140,6 +149,7 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
 CORS_ALLOW_ALL_ORIGINS = True
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
@@ -151,5 +161,3 @@ if not DEBUG:
     SECURE_PROXY_SSL_HEADER = tuple(
         os.environ.get("CONFIG_SECURE_PROXY_SSL_HEADER").split(", ")
     )
-
-CELERY_TIMEZONE = "Asia/Tehran"
