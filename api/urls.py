@@ -2,7 +2,7 @@ from django.urls import path, re_path
 from .views import (
 	MainPage, SpecificShowQuotes, AdminQuoteView, AdminDeleteUserView,
 	AdminEditQuoteView, AdminUserView, AdminEditUserView, UserQuoteView,
-	AdminEditShowView, AdminEditRoleView, AdminAllShowsView, AdminAllRolesView, )
+	AdminEditShowView, AdminEditRoleView, AllShowsView, AdminAllRolesView, )
 
 
 app_name = 'api'
@@ -11,12 +11,13 @@ urlpatterns = [
 	path("v1/quote/", UserQuoteView.as_view()),
 	re_path(r"^v1/quote/(?P<censored>)/$", UserQuoteView.as_view()),
 	path('v1/shows/<slug:slug>/', SpecificShowQuotes.as_view()),
+	path('v1/shows/', AllShowsView.as_view()),
 
 	path("v1/admin/quote/", AdminQuoteView.as_view()),
 	path("v1/admin/quote/<str:key>/", AdminEditQuoteView.as_view()),
 
 	path("v1/admin/show/edit/<slug:slug>/", AdminEditShowView.as_view()),
-	path("v1/admin/shows/", AdminAllShowsView.as_view()),
+	path("v1/admin/shows/", AllShowsView.as_view()),
 
 	path("v1/admin/role/edit/<slug:slug>/", AdminEditRoleView.as_view()),
 	path("v1/admin/roles/", AdminAllRolesView.as_view()),

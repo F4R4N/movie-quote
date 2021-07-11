@@ -158,15 +158,15 @@ class AdminEditShowView(APIView):
 		return Response(status=status.HTTP_200_OK, data={"detail": "show updated"})
 
 
-class AdminAllShowsView(generics.ListAPIView):
-	""" show all shows to admin user """
-	permission_classes = (permissions.IsAdminUser, )
+class AllShowsView(generics.ListAPIView):
+	"""List all shows"""
+	permission_classes = (permissions.AllowAny, )
 	serializer_class = ShowSerializer
 	queryset = Show.objects.all()
 
 
 class AdminEditRoleView(APIView):
-	""" edit role get field 'name' should include role slug in url. """
+	"""Edit role get field 'name' should include role slug in url"""
 	permission_classes = (permissions.IsAdminUser, )
 
 	def put(self, request, slug, format=None):
@@ -207,7 +207,7 @@ class AdminUserView(generics.ListCreateAPIView):
 
 class AdminEditUserView(APIView):
 	"""
-	edit user credentials (every user can edit itselves profile.
+	Edit user credentials (every user can edit itselves profile.
 	also mainsuperuser (default faran) can edit every users profile.).
 	it should include at least one of : [first_name, last_name, username, email,
 	(together [password1,password2]), (only main superuser can modify this
