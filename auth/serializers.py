@@ -14,12 +14,14 @@ class UserLoginSerializer(TokenObtainSerializer):
 
 		data['tokens'] = {
 			'refresh': str(refresh),
-			"access": str(refresh.access_token)}
+			"access": str(refresh.access_token)
+		}
 
 		data['user'] = {
 			'username': self.user.username,
 			'email': self.user.email,
 			'first_name': self.user.first_name,
-			'last_name': self.user.last_name}
+			'last_name': self.user.last_name
+		}
 
 		return data

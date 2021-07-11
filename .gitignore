@@ -19,4 +19,5 @@ movie-quote.code-workspace
 .vscode/
 # env variables
 local-env.cmd
-
+# log files
+log*

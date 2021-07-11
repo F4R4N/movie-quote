@@ -55,10 +55,10 @@ class VisitorsViewByDay(APIView):
 
 
 class VisitorsViewByMonth(APIView):
+
 	permission_classes = (permissions.IsAdminUser, )
 
 	def get(self, request, year, month, format=None):
 		visits = Visit.objects.filter(date__year=year, date__month=month)
 		serializer = VisitByMonthSerializer(instance=visits, many=True)
-		print(serializer.data)
 		return Response(status=status.HTTP_200_OK, data=serializer.data)

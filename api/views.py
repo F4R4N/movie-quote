@@ -93,11 +93,8 @@ class SpecificShowQuotes(APIView):
 
 
 class AdminQuoteView(generics.ListCreateAPIView):
-	"""
-	GET show all quotes at once (admin only).
-	POST add new quote (included quote, show, role) (admins only).
-
-	"""
+	"""GET show all quotes at once (admin only)
+	POST add new quote (included quote, show, role) (admins only)"""
 
 	queryset = Quote.objects.all()
 	permission_classes = (permissions.IsAdminUser, )
@@ -105,11 +102,8 @@ class AdminQuoteView(generics.ListCreateAPIView):
 
 
 class AdminEditQuoteView(APIView):
-	"""
-	edit quotes get field 'quote', 'role', 'show'.
-	should include quote key in the url.
-
-	"""
+	"""edit quotes get field 'quote', 'role', 'show'
+	should include quote key in the url."""
 
 	permission_classes = (permissions.IsAdminUser, )
 
@@ -139,7 +133,7 @@ class AdminEditQuoteView(APIView):
 
 
 class AdminEditShowView(APIView):
-	""" edit show get field 'name' should include show slug in url. """
+	"""Edit show get field 'name' should include show slug in url"""
 	permission_classes = (permissions.IsAdminUser, )
 
 	def put(self, request, slug, format=None):
@@ -186,19 +180,16 @@ class AdminEditRoleView(APIView):
 
 
 class AdminAllRolesView(generics.ListAPIView):
-	""" show all roles to admin user """
+	"""Show all roles to admin user"""
 	permission_classes = (permissions.IsAdminUser, )
 	serializer_class = RoleSerializer
 	queryset = Role.objects.all()
 
 
 class AdminUserView(generics.ListCreateAPIView):
-	"""
-	GET return all users (admin only).
+	"""GET return all users (admin only).
 	POST add new user (admin only) [username, first_name, last_name, email,
-	password1, password2](only main superuser can make user)
-
-	"""
+	password1, password2](only main superuser can make user)"""
 
 	queryset = User.objects.all()
 	permission_classes = (permissions.IsAdminUser, )
@@ -206,8 +197,7 @@ class AdminUserView(generics.ListCreateAPIView):
 
 
 class AdminEditUserView(APIView):
-	"""
-	Edit user credentials (every user can edit itselves profile.
+	"""Edit user credentials (every user can edit itselves profile.
 	also mainsuperuser (default faran) can edit every users profile.).
 	it should include at least one of : [first_name, last_name, username, email,
 	(together [password1,password2]), (only main superuser can modify this
@@ -284,10 +274,8 @@ class AdminEditUserView(APIView):
 
 
 class AdminDeleteUserView(APIView):
-	"""
-	main super user can delete anyone and anyone can delete itself. put pk in url
-
-	"""
+	"""main super user can delete anyone and anyone can delete itself,
+	put pk in url"""
 
 	permission_classes = (permissions.IsAdminUser, )
 
