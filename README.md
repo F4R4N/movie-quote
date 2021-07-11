@@ -42,7 +42,7 @@ don't show quotes which contain adult language.
 
 ### `/v1/shows/<show_slug>`
 
-you can get a random quote from the desired show. you can find list of show's slug in https://movie-quote-api.herokuapp.com/v1/shows/.
+you can get a random quote from the desired show. you can find list of show's slug in <https://movie-quote-api.herokuapp.com/v1/shows/>.
 
 ### `/v1/shows/`
 
