@@ -7,12 +7,13 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
-sched = BlockingScheduler()
 
-
-@sched.scheduled_job("cron", year="*", month='*', day="*", hour=8, minute=52)
 def send_report():
     call_command("monthly_report")
 
+
+sched = BlockingScheduler()
+
+sched.add_job(send_report, "cron", year="*", month="*", day="*")
 
 sched.start()
