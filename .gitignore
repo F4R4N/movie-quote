@@ -11,7 +11,7 @@ statistic/__pycache__/
 config/config.py
 # django test dumpdata's
 Backups/
-test*
+test-*
 # saved git diff in file
 diff*
 # vscode editor
