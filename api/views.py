@@ -23,15 +23,16 @@ class MainPage(APIView):
 	def get(self, request, format=None):
 		all_shows = list(set(Show.objects.all().values_list('slug', flat=True)))
 		data = {
-			"Developer": "Faran Taghavi",
-			"Email": "farantgh@gmail.com",
-			"Website": "https://movie-quote-api.herokuapp.com/",
-			"Github": "https://github.com/F4R4N",
-			"Show-Slugs": all_shows,
-			"Paths": [
+			"developer": "Faran Taghavi",
+			"email": "farantgh@gmail.com",
+			"website": "https://movie-quote-api.herokuapp.com/",
+			"github": "https://github.com/F4R4N",
+			"showSlugs": all_shows,
+			"paths": [
 				"v1/quote/",
-				"v1/shows/<Show-Slugs>",
-				"v1/quote/censored/"
+				"v1/shows/<showSlugs>",
+				"v1/shows/",
+				"v1/quote/?censored",
 			]
 		}
 		return Response(status=status.HTTP_200_OK, data=data)
@@ -101,7 +102,7 @@ class AdminQuoteView(generics.ListCreateAPIView):
 	serializer_class = AdminQuoteSerializer
 
 
-class AdminEditQuoteView(APIView):
+class AdminEditAndDeleteQuoteView(APIView):
 	"""edit quotes get field 'quote', 'role', 'show'
 	should include quote key in the url."""
 
