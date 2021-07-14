@@ -21,7 +21,7 @@ class MainPage(APIView):
 	permission_classes = (permissions.AllowAny, )
 
 	def get(self, request, format=None):
-		all_shows = list(set(Show.objects.all().values_list('slug', flat=True)))
+		all_shows = list(Show.objects.all().values_list('slug', flat=True))
 		data = {
 			"developer": "Faran Taghavi",
 			"email": "farantgh@gmail.com",
@@ -59,7 +59,7 @@ class UserQuoteView(APIView):
 				status=status.HTTP_200_OK,
 				data={
 					"detail": "No quote available please try again later.",
-					"status": "no-quote"
+					"status": "no_quote"
 				}
 			)
 
@@ -80,7 +80,7 @@ class SpecificShowQuotes(APIView):
 				status=status.HTTP_204_NO_CONTENT,
 				data={
 					"detail": "no quote for this show yet.",
-					"status": "no-quote-for-show"
+					"status": "no_quote_for_show"
 				}
 			)
 
@@ -208,11 +208,11 @@ class AdminEditUserView(APIView):
 
 	def put(self, request, pk, format=None):
 		user = request.user
-		if user != User.objects.get(pk=pk):
-			if not user.is_superuser and user.username != settings.MAINSUPERUSER:
-				return Response(
-					status=status.HTTP_401_UNAUTHORIZED,
-					data={"detail": "you don't have permission for this user"})
+		if user != User.objects.get(pk=pk) and not user.is_superuser\
+			and user.username != settings.MAINSUPERUSER:
+			return Response(
+				status=status.HTTP_401_UNAUTHORIZED,
+				data={"detail": "you don't have permission for this user"})
 
 		instance = get_object_or_404(User, pk=pk)
 
@@ -254,7 +254,8 @@ class AdminEditUserView(APIView):
 				return Response(
 					status=status.HTTP_400_BAD_REQUEST, data={"detail": {"password": ex}})
 
-		if "is_superuser" or "is_active" or "is_staff" in request.data:
+		if "is_superuser" in request.data or "is_active" in request.data\
+			or "is_staff" in request.data:
 			if user.username != settings.MAINSUPERUSER:
 				return Response(
 					status=status.HTTP_401_UNAUTHORIZED,
