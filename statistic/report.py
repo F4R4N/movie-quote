@@ -11,7 +11,9 @@ def monthly_report():
     report contain month visits and visitors information's"""
     cur_year = datetime.now().year
     cur_month = datetime.now().month
-    visitors = Visit.objects.filter(date__year=cur_year, date__month=cur_month)
+    visitors = Visit.objects.filter(
+        date__year=cur_year, date__month=cur_month).order_by("date__day")
+
     _, views, total_views = views_in_month(cur_year, cur_month)
 
     # send html email
