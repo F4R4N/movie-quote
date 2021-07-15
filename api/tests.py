@@ -1,6 +1,9 @@
 from rest_framework.test import APITestCase
 from django.shortcuts import reverse
 from .models import Show, Role, Quote
+from django.contrib.auth.models import User
+import json
+from rest_framework_simplejwt.tokens import RefreshToken
 
 random_quote = "api:random_quote"
 test_quote_text = "test quote"
@@ -171,3 +174,118 @@ class SpecificShowQuotesTestCase(APITestCase):
         self.assertEqual(
             response.status_code, 204,
             f"expected status code 204, got {response.status_code}")
+
+
+class AdminCreateListQuoteTestCase(APITestCase):
+    url = reverse("api:admin_create_list_quote")
+
+    def setUp(self):
+        self.show_name = "test show creation"
+        self.role_name = "test role creation"
+        self.data = json.dumps(
+            {
+                "show": self.show_name,
+                "role": self.role_name,
+                "quote": "some quote",
+                "contain_adult_lang": True
+            }
+        )
+        self.invalid_data = json.dumps(
+            {
+                "show": self.show_name,
+                "role": self.role_name,
+            }
+        )
+        self.username = "test"
+        self.email = "test@test.com"
+        self.password = "sometestpassword"
+        self.create()
+        self.header = {
+            "HTTP_AUTHORIZATION":
+            "Bearer " + str(RefreshToken.for_user(self.user).access_token)}
+
+    def create(self):
+        show = Show.objects.create(name=self.show_name)
+        role = Role.objects.create(name=self.role_name)
+        Quote.objects.create(
+            show=show,
+            role=role,
+            quote=test_quote_text
+        )
+        self.user = User.objects.create(
+            username=self.username,
+            is_staff=True,
+            is_superuser=True,
+            is_active=True,
+            email=self.email,
+            password=self.password
+        )
+
+    def test_quote_creation_invalid_authentication(self):
+        response = self.client.post(
+            self.url,
+            data=self.data
+        )
+        self.assertEqual(
+            response.status_code, 401,
+            f"expected status code 401, got {response.status_code}")
+
+    def test_quote_creation_valid_authentication(self):
+        response = self.client.post(
+            self.url,
+            self.data, content_type="application/json", **self.header
+        )
+        self.assertEqual(
+            response.status_code, 201,
+            f"expected status code 201, got {response.status_code}")
+
+    def test_quote_creation_ivalid_data(self):
+        response = self.client.post(
+            self.url, data=self.invalid_data, **self.header)
+
+        self.assertEqual(
+            response.status_code, 400,
+            f"expected status code 400, got {response.status_code}")
+
+    def test_quote_list(self):
+        response = self.client.get(self.url, **self.header)
+        self.assertEqual(
+            response.status_code, 200,
+            f"expected status code 200, got {response.status_code}"
+        )
+        self.assertEqual(
+            len(response.json()), 1,
+            f"expected 1 object, got {len(response.json())}"
+        )
+
+
+class EditAndDeleteQuoteTestCase(APITestCase):
+    def setUp(self):
+        self.show_name = "test show creation"
+        self.role_name = "test role creation"
+
+        self.username = "test"
+        self.email = "test@test.com"
+        self.password = "sometestpassword"
+        self.create()
+        self.url = reverse(
+            "api:admin_edit_delete_quote", kwargs={"key": self.quote.key})
+
+    def create(self):
+        show = Show.objects.create(name=self.show_name)
+        role = Role.objects.create(name=self.role_name)
+        self.quote = Quote.objects.create(
+            show=show,
+            role=role,
+            quote=self.quote_text
+        )
+        self.user = User.objects.create(
+            username=self.username,
+            is_staff=True,
+            is_superuser=True,
+            is_active=True,
+            email=self.email,
+            password=self.password
+        )
+
+    # def test_edit_quote(self):
