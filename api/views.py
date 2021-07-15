@@ -74,6 +74,8 @@ class SpecificShowQuotes(APIView):
 	permission_classes = (permissions.AllowAny, )
 
 	def get(self, request, slug, format=None):
+		ip = get_client_ip(request)
+		add_or_create_visit(ip)
 		requested_show = get_object_or_404(Show, slug=slug)
 		if not requested_show.show.all().exists():
 			return Response(
