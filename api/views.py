@@ -97,7 +97,9 @@ class SpecificShowQuotes(APIView):
 
 class AdminQuoteView(generics.ListCreateAPIView):
 	"""GET show all quotes at once (admin only)
-	POST add new quote (included quote, show, role) (admins only)"""
+	POST add new quote (included quote, show, role) (admins only),
+	show and role should send as string (not object) which is the name of them,
+	object will create on the server side"""
 
 	queryset = Quote.objects.all()
 	permission_classes = (permissions.IsAdminUser, )
