@@ -108,7 +108,8 @@ class AdminQuoteView(generics.ListCreateAPIView):
 
 class AdminEditAndDeleteQuoteView(APIView):
 	"""edit quotes get field 'quote', 'role', 'show'
-	should include quote key in the url."""
+	should include quote key in the url.
+	only can change show and role to an existed show and role object."""
 
 	permission_classes = (permissions.IsAdminUser, )
 
