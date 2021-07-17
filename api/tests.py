@@ -261,9 +261,10 @@ class AdminCreateListQuoteTestCase(APITestCase):
 
 class EditAndDeleteQuoteTestCase(APITestCase):
     def setUp(self):
-        self.show_name = "test show creation"
-        self.role_name = "test role creation"
-
+        self.show_name1 = "test show creation1"
+        self.role_name1 = "test role creation1"
+        self.show_name2 = "test show creation2".title()
+        self.role_name2 = "test role creation2".title()
         self.username = "test"
         self.email = "test@test.com"
         self.password = "sometestpassword"
@@ -271,13 +272,20 @@ class EditAndDeleteQuoteTestCase(APITestCase):
         self.url = reverse(
             "api:admin_edit_delete_quote", kwargs={"key": self.quote.key})
 
+        self.header = {
+            "HTTP_AUTHORIZATION":
+            "Bearer " + str(RefreshToken.for_user(self.user).access_token)}
+
     def create(self):
-        show = Show.objects.create(name=self.show_name)
-        role = Role.objects.create(name=self.role_name)
+        show1 = Show.objects.create(name=self.show_name1)
+        role1 = Role.objects.create(name=self.role_name1)
+        self.show2 = Show.objects.create(name=self.show_name2)
+        self.role2 = Role.objects.create(name=self.role_name2)
         self.quote = Quote.objects.create(
-            show=show,
-            role=role,
-            quote=self.quote_text
+            show=show1,
+            role=role1,
+            quote=test_quote_text,
+            contain_adult_lang=True
         )
         self.user = User.objects.create(
             username=self.username,
@@ -288,4 +296,27 @@ class EditAndDeleteQuoteTestCase(APITestCase):
             password=self.password
         )
 
-    # def test_edit_quote(self):
+    def test_edit_quote_valid(self):
+        data = {
+            "show": self.show_name2,
+            "contain_adult_lang": False
+        }
+        response = self.client.put(
+            self.url, data, **self.header)
+        self.assertEqual(
+            response.status_code, 200,
+            f"expected status code 200, got {response.status_code}")
+        self.assertEqual(response.json()["detail"], "updated")
+
+    def test_edit_quote_invalid(self):
+        data = {
+            "show": "test valid show name",
+            "role": "test valid role name",
+            "contain_adult_lang": False
+        }
+        response = self.client.put(
+            self.url, data, **self.header)
+        self.assertEqual(
+            response.status_code, 404,
+            f"expected status code 404, got {response.status_code}")
+        self.assertEqual(response.json()["detail"], "Not found.")
