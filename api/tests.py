@@ -320,3 +320,16 @@ class EditAndDeleteQuoteTestCase(APITestCase):
             response.status_code, 404,
             f"expected status code 404, got {response.status_code}")
         self.assertEqual(response.json()["detail"], "Not found.")
+
+    def test_delete_quote_valid(self):
+        response = self.client.delete(
+            self.url,
+            **self.header
+        )
+        self.assertEqual(
+            response.status_code, 200,
+            f"expected status code 200, got {response.status_code}")
+        self.assertEqual(response.json()["detail"], "deleted")
+
+# class EditShowTestCase(APITestCase):
+    
