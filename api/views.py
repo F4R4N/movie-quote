@@ -114,13 +114,13 @@ class AdminEditAndDeleteQuoteView(APIView):
 	permission_classes = (permissions.IsAdminUser, )
 
 	def put(self, request, key, format=None):
-		if not "quote" and "show" and "role" in request.data:
+		if "quote" not in request.data and "show" not in request.data and "role" not in request.data:
 			return Response(
 				status=status.HTTP_400_BAD_REQUEST,
-				data={"detail": "no new data provided"})
+				data={"detail": "no new data provided"}
+			)
 
 		quote = get_object_or_404(Quote, key=key)
-
 		if "show" in request.data:
 			show = get_object_or_404(Show, name=request.data["show"].title())
 			quote.show = show
