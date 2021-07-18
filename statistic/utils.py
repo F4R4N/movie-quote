@@ -5,6 +5,8 @@ import requests
 from django.conf import settings
 import calendar
 
+UNKNOWN = "unknown"
+
 
 def add_or_create_visit(ip: str):
 	"""Create Visit object if not already exists"""
@@ -35,13 +37,23 @@ def get_client_ip(request) -> str:
 	return ip
 
 
-def get_user_country_by_ip(ip: str) -> str:
+def get_user_country_by_ip(ip: str) -> dict:
 	"""Send request to "ipstack" api and get user location by its IP address"""
-	api_key = settings.IPSTACK_ACCESS_KEY
-	url = f"http://api.ipstack.com/{ip}?access_key={api_key}"
-	response = requests.get(url).json()
-	return "{0}, {1}, {2}".format(
-		response["country_name"], response["region_name"], response["city"])
+	try:
+		api_key = settings.IPSTACK_ACCESS_KEY
+		url = f"http://api.ipstack.com/{ip}?access_key={api_key}"
+		response = requests.get(url).json()
+		return {
+			"country": response["country_name"],
+			"region": response["region_name"],
+			"city": response["city"]
+		}
+	except KeyError:
+		return {
+			"country": UNKNOWN,
+			"region": UNKNOWN,
+			"city": UNKNOWN
+		}
 
 
 def views_in_month(year: int, month: int) -> tuple:
