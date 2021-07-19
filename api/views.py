@@ -1,19 +1,20 @@
 from rest_framework.views import APIView
 from rest_framework import permissions, status, generics
 from rest_framework.response import Response
+
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
+
 from .models import Quote, Show, Role
 from .serializers import (
 	QuoteSerializer, AdminQuoteSerializer,
 	AdminAddUserSerializer, ShowSerializer, RoleSerializer)
-from django.shortcuts import get_object_or_404
-from statistic.utils import get_client_ip
-from django.conf import settings
+from statistic.utils import get_client_ip, add_or_create_visit
+
 import random
-from django.contrib.auth.models import User
-from statistic.utils import add_or_create_visit
 
 
 class MainPage(APIView):
@@ -169,7 +170,7 @@ class AllShowsView(generics.ListAPIView):
 
 
 class AdminEditRoleView(APIView):
-	"""Edit role get field 'name' should include role slug in url"""
+	"""Edit role get field 'name' should include role slug in url."""
 	permission_classes = (permissions.IsAdminUser, )
 
 	def put(self, request, slug, format=None):
@@ -189,7 +190,7 @@ class AdminEditRoleView(APIView):
 
 
 class AdminAllRolesView(generics.ListAPIView):
-	"""Show all roles to admin user"""
+	"""Show all roles to admin user."""
 	permission_classes = (permissions.IsAdminUser, )
 	serializer_class = RoleSerializer
 	queryset = Role.objects.all()
@@ -198,7 +199,8 @@ class AdminAllRolesView(generics.ListAPIView):
 class AdminUserView(generics.ListCreateAPIView):
 	"""GET return all users (admin only).
 	POST add new user (admin only) [username, first_name, last_name, email,
-	password1, password2](only main superuser can make user)"""
+	password1, password2](only main superuser can make user).
+	"""
 
 	queryset = User.objects.all()
 	permission_classes = (permissions.IsAdminUser, )
@@ -207,17 +209,23 @@ class AdminUserView(generics.ListCreateAPIView):
 
 class AdminEditUserView(APIView):
 	"""Edit user credentials (every user can edit itselves profile.
-	also mainsuperuser (default faran) can edit every users profile.).
+	also mainsuperuse can edit every users profile.).
 	it should include at least one of : [first_name, last_name, username, email,
 	(together [password1,password2]), (only main superuser can modify this
-	[is_superuser, is_active, is_staff]) ]"""
+	[is_superuser, is_active, is_staff]) ].
+	"""
 
 	permission_classes = (permissions.IsAuthenticated, )
 
 	def put(self, request, pk, format=None):
 		user = request.user
+		main_superuser_username = User.objects.filter(
+			is_superuser=True,
+			is_staff=True,
+			is_active=True
+		).first().username
 		if user != User.objects.get(pk=pk) and not user.is_superuser\
-			and user.username != settings.MAINSUPERUSER:
+			and user.username != main_superuser_username:
 			return Response(
 				status=status.HTTP_401_UNAUTHORIZED,
 				data={"detail": "you don't have permission for this user"})
@@ -264,7 +272,7 @@ class AdminEditUserView(APIView):
 
 		if "is_superuser" in request.data or "is_active" in request.data\
 			or "is_staff" in request.data:
-			if user.username != settings.MAINSUPERUSER:
+			if user.username != main_superuser_username:
 				return Response(
 					status=status.HTTP_401_UNAUTHORIZED,
 					data={
@@ -284,15 +292,21 @@ class AdminEditUserView(APIView):
 
 
 class AdminDeleteUserView(APIView):
-	"""main super user can delete anyone and anyone can delete itself,
-	put pk in url"""
+	"""Main super user can delete anyone and anyone can delete itself,
+	put pk in url.
+	"""
 
 	permission_classes = (permissions.IsAdminUser, )
 
 	def delete(self, request, pk, format=None):
+		main_superuser_username = User.objects.filter(
+			is_superuser=True,
+			is_staff=True,
+			is_active=True
+		).first().username
 		user = request.user
 		deletable_user = get_object_or_404(User, pk=pk)
-		if user.username != settings.MAINSUPERUSER:
+		if user.username != main_superuser_username:
 			if user != deletable_user:
 				return Response(
 					status=status.HTTP_400_BAD_REQUEST,
