@@ -265,8 +265,8 @@ class AdminCreateListQuoteTestCase(APITestCase):
 
 class EditAndDeleteQuoteTestCase(APITestCase):
     def setUp(self):
-        self.show_name1 = "test show creation1"
-        self.role_name1 = "test role creation1"
+        self.show_name1 = "test show creation1".title()
+        self.role_name1 = "test role creation1".title()
         self.show_name2 = "test show creation2".title()
         self.role_name2 = "test role creation2".title()
         self.username = "test"
@@ -591,6 +591,16 @@ class AdminAddListUserTestCase(APITestCase):
         self.password1 = "sometestpassword"
         self.username2 = "test2"
         self.password2 = "sometestpassword"
+        self.data = {
+            "username": "test",
+            "email": "test1@test.com",
+            "first_name": "test",
+            "last_name": "test",
+            "is_active": True,
+            "is_superuser": True,
+            "password1": "this is a password",
+            "password2": "this is a password"
+        }
         self.create()
         self.url = reverse(
             "api:admin_create_list_user")
@@ -632,4 +642,15 @@ class AdminAddListUserTestCase(APITestCase):
         self.assertEqual(
             len(response.json()), 3,
             f"expected 3 object, got {len(response.json())}"
+        )
+
+    def test_create_user_valid(self):
+        response = self.client.post(
+            self.url,
+            self.data,
+            **self.header
+        )
+        self.assertEqual(
+            response.status_code, 201,
+            f"expected status code 201, got {response.status_code}"
         )
