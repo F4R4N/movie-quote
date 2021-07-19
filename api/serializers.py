@@ -38,11 +38,16 @@ class AdminAddUserSerializer(serializers.ModelSerializer):
 		}
 
 	def validate(self, attrs):
-		if self.context['request'].user.username != "faran":
+		main_superuser_username = User.objects.filter(
+			is_superuser=True,
+			is_staff=True,
+			is_active=True
+		).first().username
+		if self.context['request'].user.username != main_superuser_username:
 			raise serializers.ValidationError(
 				{
 					"detail": "you don't have permission to perform this action",
-					"hint": "contact user 'faran'"})
+					"hint": f"contact user '{main_superuser_username}'"})
 
 		if attrs['password2'] != attrs["password1"]:
 			raise serializers.ValidationError(
@@ -60,6 +65,7 @@ class AdminAddUserSerializer(serializers.ModelSerializer):
 		)
 		user.set_password(validated_data["password1"])
 		user.save()
+		user.user_permissions.clear()
 		return user
 
 
