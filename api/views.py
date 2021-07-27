@@ -14,8 +14,6 @@ from .serializers import (
 	AdminAddUserSerializer, ShowSerializer, RoleSerializer)
 from statistic.utils import get_client_ip, add_or_create_visit
 
-import random
-
 
 class MainPage(APIView):
 	"""Show developers info instead of 404 at the main page"""
@@ -48,14 +46,12 @@ class UserQuoteView(APIView):
 		add_or_create_visit(ip)
 		if "censored" in request.query_params:
 
-			all_quotes = Quote.objects.filter(
-				contain_adult_lang=False).values_list('pk', flat=True)
+			all_quotes_random = Quote.objects.filter(
+				contain_adult_lang=False).order_by("?")
 		else:
-			all_quotes = Quote.objects.all().values_list('pk', flat=True)
+			all_quotes_random = Quote.objects.all().order_by("?")
 
-		try:
-			quote_pk = random.choice(all_quotes)
-		except IndexError:
+		if all_quotes_random.count() == 0:
 			return Response(
 				status=status.HTTP_200_OK,
 				data={
@@ -63,9 +59,7 @@ class UserQuoteView(APIView):
 					"status": "no_quote"
 				}
 			)
-
-		quote = get_object_or_404(Quote, pk=quote_pk)
-		serializer = QuoteSerializer(instance=quote)
+		serializer = QuoteSerializer(instance=all_quotes_random.first())
 		return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
