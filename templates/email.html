@@ -38,7 +38,7 @@
 {% for visit, obj in visits.visitors.items %}
 <tr>
     <td style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 15px;color: #4c4c4c; width: 33.333%;">{{ visit }}</td>
-    <td style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 15px;color: #4c4c4c; width: 33.333%;">{{ obj.location }}</td>
+    <td style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 15px;color: #4c4c4c; width: 33.333%;">{{ obj.location.country }}, {{ obj.location.region }}, {{ obj.location.city }}</td>
     <td style="border: 1px solid #dddddd; text-align: center; padding: 8px; font-size: 15px;color: #4c4c4c; width: 33.333%;">{{ obj.views }}</td>
 </tr>
 
