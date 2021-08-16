@@ -81,11 +81,8 @@ class SpecificShowQuotes(APIView):
 				}
 			)
 
-		all_requested_show_quotes = requested_show.show.all().values_list(
-			'pk', flat=True)
+		quote = requested_show.show.all().order_by("?").first()
 
-		quote_pk = random.choice(all_requested_show_quotes)
-		quote = get_object_or_404(Quote, pk=quote_pk)
 		serializer = QuoteSerializer(instance=quote)
 		return Response(status=status.HTTP_200_OK, data=serializer.data)
 
