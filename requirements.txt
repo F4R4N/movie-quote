@@ -26,7 +26,7 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 packaging==20.9
 prompt-toolkit==3.0.19
-psycopg2==2.8.6
+psycopg2-binary==2.8.6
 pycodestyle==2.7.0
 pyflakes==2.3.1
 PyJWT==1.7.1
@@ -34,7 +34,6 @@ pyparsing==2.4.7
 pytz==2021.1
 requests==2.25.1
 ruamel.yaml==0.16.13
-ruamel.yaml.clib==0.2.2
 six==1.16.0
 sqlparse==0.4.1
 tzlocal==2.1
