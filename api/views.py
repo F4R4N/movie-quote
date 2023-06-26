@@ -24,7 +24,7 @@ class MainPage(APIView):
 		data = {
 			"developer": "Faran Taghavi",
 			"email": "farantgh@gmail.com",
-			"website": "https://movie-quote-api.herokuapp.com/",
+			"website": request.get_host(),
 			"github": "https://github.com/F4R4N",
 			"showSlugs": all_shows,
 			"paths": [
@@ -199,8 +199,8 @@ class AdminUserView(generics.ListCreateAPIView):
 
 
 class AdminEditUserView(APIView):
-	"""Edit user credentials (every user can edit itselves profile.
-	also mainsuperuse can edit every users profile.).
+	"""Edit user credentials (every user can edit it selves profile.
+	also main superuser can edit every users profile.).
 	it should include at least one of : [first_name, last_name, username, email,
 	(together [password1,password2]), (only main superuser can modify this
 	[is_superuser, is_active, is_staff]) ].
@@ -290,14 +290,13 @@ class AdminDeleteUserView(APIView):
 	permission_classes = (permissions.IsAdminUser, )
 
 	def delete(self, request, pk, format=None):
-		main_superuser_username = User.objects.filter(
+		user = request.user
+		deletable_user = get_object_or_404(User, pk=pk)
+		if user.username != User.objects.filter(
 			is_superuser=True,
 			is_staff=True,
 			is_active=True
-		).first().username
-		user = request.user
-		deletable_user = get_object_or_404(User, pk=pk)
-		if user.username != main_superuser_username:
+		).first().username:
 			if user != deletable_user:
 				return Response(
 					status=status.HTTP_400_BAD_REQUEST,
@@ -308,3 +307,5 @@ class AdminDeleteUserView(APIView):
 		return Response(
 			status=status.HTTP_200_OK,
 			data={"detail": "user '{0}' deleted".format(deletable_user.username)})
+
+# class SuggestionTicketView()
