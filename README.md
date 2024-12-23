@@ -16,18 +16,6 @@ a api made with django rest framework serve movie and series quotes. you can fin
 8. `python3 manage.py runserver`
 9. open browser in 127.0.0.1:8000
 
-### Windows
-
-1. `git clone https://github.com/F4R4N/movie-quote.git` or download directly
-2. install [python3](https://www.python.org/downloads/)
-3. `cd movie-quote`
-4. `python -m venv venv`
-5. `venv\Scripts\activate`
-6. `move sample.config.py config.py` (change settings based on your usage)
-7. `python manage.py migrate`
-8. `python manage.py runserver`
-9. open browser in 127.0.0.1:8000
-
 ## Usage
 
 use the following path's to get the quotes.
