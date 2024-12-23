@@ -26,7 +26,7 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 packaging==20.9
 prompt-toolkit==3.0.19
-psycopg2-binary==2.8.6
+psycopg2
 pycodestyle==2.7.0
 pyflakes==2.3.1
 PyJWT==1.7.1
