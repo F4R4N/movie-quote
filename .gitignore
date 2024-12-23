@@ -21,3 +21,10 @@ movie-quote.code-workspace
 local-env.cmd
 # log files
 log*
+Procfile
+runtime.txt
+data.json
+
+*.pyc
+migrations/
+.env
