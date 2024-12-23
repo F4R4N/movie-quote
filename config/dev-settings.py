@@ -63,18 +63,19 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, "db.sqlite3")
     }
 }
+PASSWORD_VALIDATOR = 'django.contrib.auth.password_validation.'
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': f'{PASSWORD_VALIDATOR}UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': f'{PASSWORD_VALIDATOR}MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': f'{PASSWORD_VALIDATOR}CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': f'{PASSWORD_VALIDATOR}NumericPasswordValidator',
     },
 ]
 
@@ -117,8 +118,6 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }
-# change this when you made your user
-MAINSUPERUSER = "faran"
 
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
