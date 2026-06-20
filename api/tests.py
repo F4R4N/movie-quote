@@ -174,7 +174,7 @@ class SpecificShowQuotesTestCase(APITestCase):
             f"expected status code 404, got {response.status_code}",
         )
 
-        self.assertEqual(response.json()["detail"], "Not found.")
+        self.assertEqual(response.json()["detail"], "No Show matches the given query.")
 
     def test_no_quote_associate_with_show(self):
         url = reverse(self.url_path, kwargs={"slug": self.alter_show_name})
@@ -331,7 +331,7 @@ class EditAndDeleteQuoteTestCase(APITestCase):
             404,
             f"expected status code 404, got {response.status_code}",
         )
-        self.assertEqual(response.json()["detail"], "Not found.")
+        self.assertEqual(response.json()["detail"], "No Show matches the given query.")
 
     def test_delete_quote_valid(self):
         response = self.client.delete(self.url, **self.header)
