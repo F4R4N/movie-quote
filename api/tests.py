@@ -30,12 +30,14 @@ class MainPageTestCase(APITestCase):
         self.assertEqual(
             response.status_code,
             200,
-            f"expected status code 200, got {response.status_code}")
+            f"expected status code 200, got {response.status_code}",
+        )
 
     def test_shows_list(self):
         response = self.client.get(self.url)
         self.assertEqual(
-            response.json()["showSlugs"], [self.show_name1, self.show_name2])
+            response.json()["showSlugs"], [self.show_name1, self.show_name2]
+        )
 
 
 class RandomQuoteTestCase(APITestCase):
@@ -57,31 +59,38 @@ class RandomQuoteTestCase(APITestCase):
             quote=self.quote,
             show=show,
             role=role,
-            contain_adult_lang=self.contain_adult_lang
+            contain_adult_lang=self.contain_adult_lang,
         )
 
     def test_quote(self):
         response = self.client.get(self.url)
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}")
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
+        )
 
         self.assertEqual(
-            response.json()["quote"], self.quote, "quote don't match")
+            response.json()["quote"], self.quote, "quote don't match"
+        )
 
         self.assertEqual(
-            response.json()["show"], self.show_name, "show name don't match")
+            response.json()["show"], self.show_name, "show name don't match"
+        )
 
         self.assertEqual(
-            response.json()["role"], self.role_name, "role name don't match")
+            response.json()["role"], self.role_name, "role name don't match"
+        )
 
         self.assertTrue(response.json()["contain_adult_lang"])
 
     def test_censored_quote_not_accessible(self):
         response = self.client.get(self.url_censored)
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}")
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
+        )
 
         self.assertEqual(response.json()["status"], "no_quote")
 
@@ -104,15 +113,17 @@ class CensoredQuoteTestCase(APITestCase):
             quote=self.quote,
             show=show,
             role=role,
-            contain_adult_lang=self.contain_adult_lang
+            contain_adult_lang=self.contain_adult_lang,
         )
 
     def test_censored_quote_accessible(self):
         response = self.client.get(self.url)
 
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}")
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
+        )
 
         self.assertEqual(response.json()["quote"], self.quote)
 
@@ -135,7 +146,7 @@ class SpecificShowQuotesTestCase(APITestCase):
             quote=self.quote,
             show=show,
             role=role,
-            contain_adult_lang=self.contain_adult_lang
+            contain_adult_lang=self.contain_adult_lang,
         )
         Show.objects.create(name=self.alter_show_name)
 
@@ -144,39 +155,36 @@ class SpecificShowQuotesTestCase(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}")
-
-        self.assertEqual(
-            response.json()["quote"],
-            self.quote
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
         )
 
-        self.assertEqual(
-            response.json()["show"],
-            self.show_name
-        )
+        self.assertEqual(response.json()["quote"], self.quote)
+
+        self.assertEqual(response.json()["show"], self.show_name)
 
     def test_quote_invalid(self):
         url = reverse(self.url_path, kwargs={"slug": "invalid_show_slug"})
         response = self.client.get(url)
 
         self.assertEqual(
-            response.status_code, 404,
-            f"expected status code 404, got {response.status_code}")
-
-        self.assertEqual(
-            response.json()["detail"],
-            "Not found."
+            response.status_code,
+            404,
+            f"expected status code 404, got {response.status_code}",
         )
+
+        self.assertEqual(response.json()["detail"], "Not found.")
 
     def test_no_quote_associate_with_show(self):
         url = reverse(self.url_path, kwargs={"slug": self.alter_show_name})
         response = self.client.get(url)
 
         self.assertEqual(
-            response.status_code, 204,
-            f"expected status code 204, got {response.status_code}")
+            response.status_code,
+            204,
+            f"expected status code 204, got {response.status_code}",
+        )
 
 
 class AdminCreateListQuoteTestCase(APITestCase):
@@ -190,7 +198,7 @@ class AdminCreateListQuoteTestCase(APITestCase):
                 "show": self.show_name,
                 "role": self.role_name,
                 "quote": "some quote",
-                "contain_adult_lang": True
+                "contain_adult_lang": True,
             }
         )
         self.invalid_data = json.dumps(
@@ -203,63 +211,63 @@ class AdminCreateListQuoteTestCase(APITestCase):
         self.password = "sometestpassword"
         self.create()
         self.header = {
-            "HTTP_AUTHORIZATION":
-            AUTH_TOKEN_PREFIX + str(
-                RefreshToken.for_user(self.user).access_token)
+            "HTTP_AUTHORIZATION": AUTH_TOKEN_PREFIX
+            + str(RefreshToken.for_user(self.user).access_token)
         }
 
     def create(self):
         show = Show.objects.create(name=self.show_name)
         role = Role.objects.create(name=self.role_name)
-        Quote.objects.create(
-            show=show,
-            role=role,
-            quote=test_quote_text
-        )
+        Quote.objects.create(show=show, role=role, quote=test_quote_text)
         self.user = User.objects.create(
             username=self.username,
             is_staff=True,
             is_superuser=True,
             is_active=True,
             email=EMAIL,
-            password=self.password
+            password=self.password,
         )
 
     def test_quote_creation_invalid_authentication(self):
-        response = self.client.post(
-            self.url,
-            data=self.data
-        )
+        response = self.client.post(self.url, data=self.data)
         self.assertEqual(
-            response.status_code, 401,
-            f"expected status code 401, got {response.status_code}")
+            response.status_code,
+            401,
+            f"expected status code 401, got {response.status_code}",
+        )
 
     def test_quote_creation_valid_authentication(self):
         response = self.client.post(
-            self.url,
-            self.data, content_type="application/json", **self.header
+            self.url, self.data, content_type="application/json", **self.header
         )
         self.assertEqual(
-            response.status_code, 201,
-            f"expected status code 201, got {response.status_code}")
+            response.status_code,
+            201,
+            f"expected status code 201, got {response.status_code}",
+        )
 
     def test_quote_creation_ivalid_data(self):
         response = self.client.post(
-            self.url, data=self.invalid_data, **self.header)
+            self.url, data=self.invalid_data, **self.header
+        )
 
         self.assertEqual(
-            response.status_code, 400,
-            f"expected status code 400, got {response.status_code}")
+            response.status_code,
+            400,
+            f"expected status code 400, got {response.status_code}",
+        )
 
     def test_quote_list(self):
         response = self.client.get(self.url, **self.header)
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}"
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
         )
         self.assertEqual(
-            len(response.json()), 1,
-            f"expected 1 object, got {len(response.json())}"
+            len(response.json()),
+            1,
+            f"expected 1 object, got {len(response.json())}",
         )
 
 
@@ -273,12 +281,12 @@ class EditAndDeleteQuoteTestCase(APITestCase):
         self.password = "sometestpassword"
         self.create()
         self.url = reverse(
-            "api:admin_edit_delete_quote", kwargs={"key": self.quote.key})
+            "api:admin_edit_delete_quote", kwargs={"key": self.quote.key}
+        )
 
         self.header = {
-            "HTTP_AUTHORIZATION":
-            AUTH_TOKEN_PREFIX + str(
-                RefreshToken.for_user(self.user).access_token)
+            "HTTP_AUTHORIZATION": AUTH_TOKEN_PREFIX
+            + str(RefreshToken.for_user(self.user).access_token)
         }
 
     def create(self):
@@ -290,7 +298,7 @@ class EditAndDeleteQuoteTestCase(APITestCase):
             show=show1,
             role=role1,
             quote=test_quote_text,
-            contain_adult_lang=True
+            contain_adult_lang=True,
         )
         self.user = User.objects.create(
             username=self.username,
@@ -298,42 +306,40 @@ class EditAndDeleteQuoteTestCase(APITestCase):
             is_superuser=True,
             is_active=True,
             email=EMAIL,
-            password=self.password
+            password=self.password,
         )
 
     def test_edit_quote_valid(self):
-        data = {
-            "show": self.show_name2,
-            "contain_adult_lang": False
-        }
-        response = self.client.put(
-            self.url, data, **self.header)
+        data = {"show": self.show_name2, "contain_adult_lang": False}
+        response = self.client.put(self.url, data, **self.header)
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}")
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
+        )
         self.assertEqual(response.json()["detail"], "updated")
 
     def test_edit_quote_invalid(self):
         data = {
             "show": "test valid show name",
             "role": "test valid role name",
-            "contain_adult_lang": False
+            "contain_adult_lang": False,
         }
-        response = self.client.put(
-            self.url, data, **self.header)
+        response = self.client.put(self.url, data, **self.header)
         self.assertEqual(
-            response.status_code, 404,
-            f"expected status code 404, got {response.status_code}")
+            response.status_code,
+            404,
+            f"expected status code 404, got {response.status_code}",
+        )
         self.assertEqual(response.json()["detail"], "Not found.")
 
     def test_delete_quote_valid(self):
-        response = self.client.delete(
-            self.url,
-            **self.header
-        )
+        response = self.client.delete(self.url, **self.header)
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}")
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
+        )
         self.assertEqual(response.json()["detail"], "deleted")
 
 
@@ -345,12 +351,12 @@ class EditShowTestCase(APITestCase):
         self.password = "sometestpassword"
         self.create()
         self.url = reverse(
-            "api:admin_edit_show", kwargs={"slug": slugify(self.show_name1)})
+            "api:admin_edit_show", kwargs={"slug": slugify(self.show_name1)}
+        )
 
         self.header = {
-            "HTTP_AUTHORIZATION":
-            AUTH_TOKEN_PREFIX + str(
-                RefreshToken.for_user(self.user).access_token)
+            "HTTP_AUTHORIZATION": AUTH_TOKEN_PREFIX
+            + str(RefreshToken.for_user(self.user).access_token)
         }
 
     def create(self):
@@ -361,18 +367,18 @@ class EditShowTestCase(APITestCase):
             is_superuser=True,
             is_active=True,
             email=EMAIL,
-            password=self.password
+            password=self.password,
         )
 
     def test_edit_show_valid(self):
         response = self.client.put(
-            self.url,
-            {"name": self.show_name2},
-            **self.header
+            self.url, {"name": self.show_name2}, **self.header
         )
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}")
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
+        )
         self.assertEqual(response.json()["detail"], "show updated")
         all_shows = Show.objects.all()
         self.assertEqual(len(all_shows), 1)
@@ -380,48 +386,42 @@ class EditShowTestCase(APITestCase):
 
     def test_edit_show_invalid_data(self):
         response = self.client.put(
-            self.url,
-            {"hello": self.show_name1},
-            **self.header
+            self.url, {"hello": self.show_name1}, **self.header
         )
         self.assertEqual(
-            response.status_code, 400,
-            f"expected status code 400, got {response.status_code}")
+            response.status_code,
+            400,
+            f"expected status code 400, got {response.status_code}",
+        )
         self.assertEqual(response.json()["detail"], "no new data provided.")
 
     def test_edit_show_no_token(self):
-        response = self.client.put(
-            self.url,
-            {"name": self.show_name1}
-        )
+        response = self.client.put(self.url, {"name": self.show_name1})
         self.assertEqual(
-            response.status_code, 401,
-            f"expected status code 401, got {response.status_code}")
+            response.status_code,
+            401,
+            f"expected status code 401, got {response.status_code}",
+        )
 
     def test_invalid_http_method(self):
         response = self.client.post(
-            self.url,
-            {"name": self.show_name1},
-            **self.header
+            self.url, {"name": self.show_name1}, **self.header
         )
         self.assertEqual(
             response.status_code,
             405,
-            f"expected status code 405, got {response.status_code}"
+            f"expected status code 405, got {response.status_code}",
         )
 
     def test_edit_show_not_exist_show(self):
-        url = reverse(
-            "api:admin_edit_show",
-            kwargs={"slug": "its_test"})
+        url = reverse("api:admin_edit_show", kwargs={"slug": "its_test"})
         response = self.client.put(
-            url,
-            {"name", "its_not_test"},
-            **self.header
+            url, {"name", "its_not_test"}, **self.header
         )
         self.assertEqual(
-            response.status_code, 404,
-            f"expected status code 404, got {response.status_code}"
+            response.status_code,
+            404,
+            f"expected status code 404, got {response.status_code}",
         )
 
 
@@ -430,8 +430,7 @@ class AllShowsTestCase(APITestCase):
         self.show_name1 = "test show creation1".title()
         self.show_name2 = "test show creation2".title()
         self.create()
-        self.url = reverse(
-            "api:all_shows")
+        self.url = reverse("api:all_shows")
 
     def create(self):
         Show.objects.create(name=self.show_name1)
@@ -440,8 +439,10 @@ class AllShowsTestCase(APITestCase):
     def test_show_availability(self):
         response = self.client.get(self.url)
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}")
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
+        )
         self.assertEqual(len(response.json()), 2)
         self.assertEqual(response.json()[0]["name"], self.show_name1)
 
@@ -462,12 +463,12 @@ class EditRoleTestCase(APITestCase):
         self.password = "sometestpassword"
         self.create()
         self.url = reverse(
-            "api:admin_edit_role", kwargs={"slug": slugify(self.role_name1)})
+            "api:admin_edit_role", kwargs={"slug": slugify(self.role_name1)}
+        )
 
         self.header = {
-            "HTTP_AUTHORIZATION":
-            AUTH_TOKEN_PREFIX + str(
-                RefreshToken.for_user(self.user).access_token)
+            "HTTP_AUTHORIZATION": AUTH_TOKEN_PREFIX
+            + str(RefreshToken.for_user(self.user).access_token)
         }
 
     def create(self):
@@ -478,7 +479,7 @@ class EditRoleTestCase(APITestCase):
             is_superuser=True,
             is_active=True,
             email=EMAIL,
-            password=self.password
+            password=self.password,
         )
 
     def test_edit_role_valid(self):
@@ -488,23 +489,17 @@ class EditRoleTestCase(APITestCase):
             **self.header,
         )
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}"
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
         )
-        self.assertEqual(
-            response.json()["detail"],
-            "role updated."
-        )
+        self.assertEqual(response.json()["detail"], "role updated.")
 
     def test_edit_role_invalid_data(self):
         response = self.client.put(
-            self.url,
-            {"hello": self.role_name2},
-            **self.header
+            self.url, {"hello": self.role_name2}, **self.header
         )
-        self.assertEqual(
-            response.status_code, 400
-        )
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json()["detail"],
             "no new data provided.",
@@ -512,14 +507,15 @@ class EditRoleTestCase(APITestCase):
 
     def test_not_exist_role(self):
         url = reverse(
-            "api:admin_edit_role", kwargs={"slug": "not_exists_test_role"})
+            "api:admin_edit_role", kwargs={"slug": "not_exists_test_role"}
+        )
         response = self.client.put(
-            url, {"name": "test role name"},
-            **self.header
+            url, {"name": "test role name"}, **self.header
         )
         self.assertEqual(
-            response.status_code, 404,
-            f"expected status code 404, got {response.status_code}"
+            response.status_code,
+            404,
+            f"expected status code 404, got {response.status_code}",
         )
 
     def test_invalid_methods(self):
@@ -539,12 +535,10 @@ class AdminListAllRolesTestCase(APITestCase):
         self.username = "test"
         self.password = "sometestpassword"
         self.create()
-        self.url = reverse(
-            "api:admin_all_roles")
+        self.url = reverse("api:admin_all_roles")
         self.header = {
-            "HTTP_AUTHORIZATION":
-            AUTH_TOKEN_PREFIX + str(
-                RefreshToken.for_user(self.user).access_token)
+            "HTTP_AUTHORIZATION": AUTH_TOKEN_PREFIX
+            + str(RefreshToken.for_user(self.user).access_token)
         }
 
     def create(self):
@@ -557,21 +551,20 @@ class AdminListAllRolesTestCase(APITestCase):
             is_superuser=True,
             is_active=True,
             email=EMAIL,
-            password=self.password
+            password=self.password,
         )
 
     def test_role_availability(self):
-        response = self.client.get(
-            self.url,
-            **self.header
+        response = self.client.get(self.url, **self.header)
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
         )
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}"
-        )
-        self.assertEqual(
-            len(response.json()), 3,
-            f"expected 3 object, got {len(response.json())}"
+            len(response.json()),
+            3,
+            f"expected 3 object, got {len(response.json())}",
         )
 
     def test_invalid_methods(self):
@@ -599,15 +592,13 @@ class AdminAddListUserTestCase(APITestCase):
             "is_active": True,
             "is_superuser": True,
             "password1": "this is a password",
-            "password2": "this is a password"
+            "password2": "this is a password",
         }
         self.create()
-        self.url = reverse(
-            "api:admin_create_list_user")
+        self.url = reverse("api:admin_create_list_user")
         self.header = {
-            "HTTP_AUTHORIZATION":
-            AUTH_TOKEN_PREFIX + str(
-                RefreshToken.for_user(self.user).access_token)
+            "HTTP_AUTHORIZATION": AUTH_TOKEN_PREFIX
+            + str(RefreshToken.for_user(self.user).access_token)
         }
 
     def create(self):
@@ -617,40 +608,32 @@ class AdminAddListUserTestCase(APITestCase):
             is_superuser=True,
             is_active=True,
             email=EMAIL,
-            password=self.admin_password
+            password=self.admin_password,
         )
         User.objects.create(
-            username=self.username1,
-            password=self.password1,
-            email="1" + EMAIL
+            username=self.username1, password=self.password1, email="1" + EMAIL
         )
         User.objects.create(
-            username=self.username2,
-            password=self.password2,
-            email="2" + EMAIL
+            username=self.username2, password=self.password2, email="2" + EMAIL
         )
 
     def test_list_all_users(self):
-        response = self.client.get(
-            self.url,
-            **self.header
+        response = self.client.get(self.url, **self.header)
+        self.assertEqual(
+            response.status_code,
+            200,
+            f"expected status code 200, got {response.status_code}",
         )
         self.assertEqual(
-            response.status_code, 200,
-            f"expected status code 200, got {response.status_code}"
-        )
-        self.assertEqual(
-            len(response.json()), 3,
-            f"expected 3 object, got {len(response.json())}"
+            len(response.json()),
+            3,
+            f"expected 3 object, got {len(response.json())}",
         )
 
     def test_create_user_valid(self):
-        response = self.client.post(
-            self.url,
-            self.data,
-            **self.header
-        )
+        response = self.client.post(self.url, self.data, **self.header)
         self.assertEqual(
-            response.status_code, 201,
-            f"expected status code 201, got {response.status_code}"
+            response.status_code,
+            201,
+            f"expected status code 201, got {response.status_code}",
         )

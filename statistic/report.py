@@ -12,16 +12,20 @@ def monthly_report():
     cur_year = datetime.now().year
     cur_month = datetime.now().month
     visitors = Visit.objects.filter(
-        date__year=cur_year, date__month=cur_month).order_by("date__day")
+        date__year=cur_year, date__month=cur_month
+    ).order_by("date__day")
 
     _, views, total_views = views_in_month(cur_year, cur_month)
 
     # send html email
-    plaintext = get_template('email.txt')
-    html = get_template('email.html')
+    plaintext = get_template("email.txt")
+    html = get_template("email.html")
     # admin users queryset
     admins = User.objects.filter(
-        is_staff=True, is_active=True, is_superuser=True, )
+        is_staff=True,
+        is_active=True,
+        is_superuser=True,
+    )
 
     # context that we want to use in email template
     context = {
@@ -41,7 +45,8 @@ def monthly_report():
         msg = EmailMultiAlternatives(
             subject=subject,
             body=text_context,
-            from_email="pythontestsendingemail@gmail.com", to=[admin.email]
+            from_email="pythontestsendingemail@gmail.com",
+            to=[admin.email],
         )
         # attach html to plain text email
         msg.attach_alternative(html_context, "text/html")
