@@ -1,14 +1,16 @@
 from pathlib import Path
 from datetime import timedelta
 import os
+import dj_database_url
+from dotenv import load_dotenv
 
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = str(os.environ.get("CONFIG_SECRET_KEY"))
 
 DEBUG = bool(int(os.environ.get("CONFIG_DEBUG", 0)))
-
 ALLOWED_HOSTS = os.environ.get("CONFIG_ALLOWED_HOSTS", []).split(", ")
 
 
@@ -60,15 +62,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 # database configs
+dev_db = "sqlite:///" + os.path.join(BASE_DIR, "db.sqlite3")
 DATABASES = {
-    'default': {
-        'ENGINE': "django.db.backends.mysql",
-        "NAME": os.environ.get("DB_NAME"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": os.environ.get("DB_HOST"),
-        "PORT": int(os.environ.get("DB_PORT")),
-    }
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL", dev_db)
+    )
 }
 PASSWORD_VALIDATOR = 'django.contrib.auth.password_validation.'
 AUTH_PASSWORD_VALIDATORS = [
@@ -87,6 +85,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
+
+STATIC_URL = 'static/'
 
 TIME_ZONE = 'America/New_York'
 
@@ -130,14 +130,19 @@ SIMPLE_JWT = {
 
 # swagger configs
 SWAGGER_SETTINGS = {
-    'USE_SESSION_AUTH': False,
     'SECURITY_DEFINITIONS': {
-        'Bearer': {
+        'basic': {
+            'type': 'basic',
+        },
+        'bearer': {
             'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header'
         }
-    }
+    },
+    'LOGIN_URL': 'rest_framework:login',
+    'LOGOUT_URL': 'rest_framework:logout',
+    'SHOW_URL_CODE_SAMPLES': True,
 }
 
 # ipstack api access key
