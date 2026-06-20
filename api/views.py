@@ -80,7 +80,7 @@ class SpecificShowQuotes(APIView):
         ip = get_client_ip(request)
         add_or_create_visit(ip)
         requested_show = get_object_or_404(Show, slug=slug)
-        if not requested_show.show.all().exists():
+        if not requested_show.quote_set.all().exists():
             return Response(
                 status=status.HTTP_204_NO_CONTENT,
                 data={
@@ -89,7 +89,7 @@ class SpecificShowQuotes(APIView):
                 },
             )
 
-        quote = requested_show.show.all().order_by("?").first()
+        quote = requested_show.quote_set.all().order_by("?").first()
 
         serializer = QuoteSerializer(instance=quote)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
@@ -303,8 +303,8 @@ class AdminEditUserView(APIView):
                 return Response(
                     status=status.HTTP_401_UNAUTHORIZED,
                     data={
-                        "detail": "you don't have permission to perform this" +
-                        "action, contact the admin user"
+                        "detail": "you don't have permission to perform this"
+                        + "action, contact the admin user"
                     },
                 )
 
