@@ -39,6 +39,3 @@ get list of available shows slugs.
 
 feel free to open `issue` or `pull request` I am trying to make repo better and this will help me.
 
-## deployment
-
-`main` branch of this repository will automatically deploy on [Heroku](https://www.heroku.com).
