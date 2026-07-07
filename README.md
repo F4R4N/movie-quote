@@ -1,6 +1,5 @@
-# movie-quote
-
-a api made with django rest framework serve movie and series quotes. you can find the api [Here](https://movie-quote-api.herokuapp.com).
+# Movie Quote API
+A Django REST Framework (DRF) API that serves random movie/series quotes.
 
 ## Run locally
 
@@ -30,7 +29,7 @@ don't show quotes which contain adult language.
 
 ### `/v1/shows/<show_slug>`
 
-you can get a random quote from the desired show. you can find list of show's slug in <https://movie-quote-api.herokuapp.com/v1/shows/>.
+you can get a random quote from the desired show.
 
 ### `/v1/shows/`
 
